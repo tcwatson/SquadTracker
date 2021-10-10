@@ -13,6 +13,7 @@ using System.Collections.Specialized;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Threading.Tasks;
+using Tyler.Blish_HUD_Module1;
 
 //todo - changing maps puts current player in former squad members. 
 //todo - added members don't get the added dropdown items
@@ -24,7 +25,6 @@ namespace Blish_HUD_Module1
     {
 
         private static readonly Logger Logger = Logger.GetLogger<Module>();
-        private ConcurrentDictionary<string, CommonFields.Player> _players;
 
         private ObservableCollection<string> _customRoles = new ObservableCollection<string>();
         private const string _placeholderRoleName = "Select a role...";
@@ -49,41 +49,68 @@ namespace Blish_HUD_Module1
 
         #endregion
 
+        private PlayerCollection _playerCollection;
+
+        private ConcurrentDictionary<string, CommonFields.Player> _arcPlayers;
+
         [ImportingConstructor]
         public Module([Import("ModuleParameters")] ModuleParameters moduleParameters) : base(moduleParameters) { }
 
+        /// <summary>
+        /// Define the settings you would like to use in your module.  Settings are persistent
+        /// between updates to both Blish HUD and your module.
+        /// </summary>
         protected override void DefineSettings(SettingCollection settings)
         {
-            settings.DefineSetting("Test bool", true);
-            settings.DefineSetting("Test float", (float)3.0);
-            settings.DefineSetting("Test int", 2);
-            settings.DefineSetting("Test string", "hello there");
-            settings.AddSubCollection("subCollection1");
         }
 
+        /// <summary>
+        /// Allows your module to perform any initialization it needs before starting to run.
+        /// Please note that Initialize is NOT asynchronous and will block Blish HUD's update
+        /// and render loop, so be sure to not do anything here that takes too long.
+        /// </summary>
         protected override void Initialize()
         {
-            
         }
 
+        /// <summary>
+        /// Load content and more here. This call is asynchronous, so it is a good time to run
+        /// any long running steps for your module including loading resources from file or ref.
+        /// </summary>
         protected override async Task LoadAsync()
         {
-
-            
-
             _tabPanel = BuildPanel(GameService.Overlay.BlishHudWindow.ContentRegion);
-            
         }
 
+        /// <summary>
+        /// Allows you to perform an action once your module has finished loading (once
+        /// <see cref="LoadAsync"/> has completed).  You must call "base.OnModuleLoaded(e)" at the
+        /// end for the <see cref="Module.ModuleLoaded"/> event to fire.
+        /// </summary>
         protected override void OnModuleLoaded(EventArgs e)
         {
-            _windowTab = GameService.Overlay.BlishHudWindow.AddTab("testTab", this.ContentsManager.GetTexture(@"textures\1466345.png"), _tabPanel);
+            _windowTab = GameService.Overlay.BlishHudWindow.AddTab("testTab", ContentsManager.GetTexture(@"textures\1466345.png"), _tabPanel);
             GameService.ArcDps.Common.Activate();
             GameService.ArcDps.Common.PlayerAdded += PlayerAddedEvent;
             GameService.ArcDps.Common.PlayerRemoved += PlayerRemovedEvent;
-            UpdateSquadMembers();
+            _playerCollection = new PlayerCollection(_arcPlayers, _squadMembersPanel, _formerSquadMembersPanel);
+            
+
             // Base handler must be called
             base.OnModuleLoaded(e);
+        }
+
+        private async void PlayerAddedEvent(CommonFields.Player player)
+        {
+            _arcPlayers = (ConcurrentDictionary<string, CommonFields.Player>)GameService.ArcDps.Common.PlayersInSquad;
+            var icon = GetSpecializationIcon(player);
+            await _playerCollection.AddPlayer(player, icon, _customRoles);
+        }
+
+        private void PlayerRemovedEvent(CommonFields.Player player)
+        {
+            _arcPlayers = (ConcurrentDictionary<string, CommonFields.Player>)GameService.ArcDps.Common.PlayersInSquad;
+            _playerCollection.RemovePlayerFromActivePanel(player);
         }
 
         private Panel BuildPanel(Rectangle panelBounds)
@@ -145,6 +172,8 @@ namespace Blish_HUD_Module1
                     _customRoles.Remove(newRole.Text);
                     existingRoles.RemoveChild(newRoleButton);
                 };
+
+                newRole.Text = string.Empty;
             };
 
             _squadMembersMenu.Click += delegate { 
@@ -192,8 +221,9 @@ namespace Blish_HUD_Module1
                 Parent = basePanel,
                 Location = new Point(_menu.Right + 10, _menu.Top),
                 CanScroll = true,
-                Size = new Point(basePanel.Width - _menu.Width - 5, 500),
-                Title = "Current Squad Members"
+                Size = new Point(basePanel.Width - _menu.Width - 5, 400),
+                Title = "Current Squad Members",
+                ShowBorder = true
             };
             _formerSquadMembersPanel = new FlowPanel
             {
@@ -202,8 +232,9 @@ namespace Blish_HUD_Module1
                 Parent = basePanel,
                 Location = new Point(_menu.Right + 10, _squadMembersPanel.Bottom + 10),
                 CanScroll = true,
-                Size = new Point(basePanel.Width - _menu.Width - 5, 500),
-                Title = "Former Squad Members"
+                Size = new Point(basePanel.Width - _menu.Width - 5, 300),
+                Title = "Former Squad Members",
+                ShowBorder = true
             };
         }
 
@@ -233,7 +264,7 @@ namespace Blish_HUD_Module1
             {
                 int playerProfession = (int) player.Profession;
                 var allProffesions = await professionsClient.AllAsync();
-                var proffessionId = allProffesions[playerProfession + 1].Id;
+                var proffessionId = allProffesions[playerProfession - 1].Id;
                 var profession = await professionsClient.GetAsync(proffessionId);
                 return GameService.Content.GetRenderServiceTexture(profession.IconBig);
             }
@@ -241,76 +272,8 @@ namespace Blish_HUD_Module1
             return GameService.Content.GetRenderServiceTexture(eliteSpec.ProfessionIconBig);
         }
 
-        private async void UpdateSquadMembers()
-        {
-            _players = (ConcurrentDictionary<string, CommonFields.Player>)GameService.ArcDps.Common.PlayersInSquad;
-            foreach (var member in _players)
-            {
-                if (!_playersDetails.Any(x => x.Text.Equals(member.Value.CharacterName)))
-                {
-                    var playerButton = new DetailsButton
-                    {
-                        Parent = _squadMembersPanel,
-                        Text = member.Value.CharacterName,
-                        IconSize = DetailsIconSize.Small,
-                        ShowVignette = true,
-                        HighlightType = DetailsHighlightType.LightHighlight,
-                        ShowToggleButton = true,
-                        Icon = await GetSpecializationIcon(member.Value),
-                        Size = new Point(354, 90)
-                    };
-                    _playersDetails.Add(playerButton);
-                     SetupDropdowns(playerButton);
-                }
-            }
-        }
 
 
-        private void SetupDropdowns(DetailsButton playerButton)
-        {
-            var dropDown = new Dropdown
-            {
-                Parent = playerButton,
-                Width = 150
-            };
-            dropDown.Items.Add(_placeholderRoleName);
-            var dropDown2 = new Dropdown
-            {
-                Parent = playerButton,
-                Width = 150
-            };
-            dropDown2.Items.Add(_placeholderRoleName);
-            _customRoles.CollectionChanged += UpdateDropdowns;
-        }
-
-        private void UpdateDropdowns(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            foreach (var playerButton in _playersDetails)
-            {
-                var dropDowns = playerButton.GetDescendants().Where(x => x.GetType().Equals(typeof(Dropdown)));
-                foreach (Dropdown dropDown in dropDowns)
-                {
-                    if (e.Action.ToString().Equals("Remove"))
-                    {
-                        foreach (var removedItem in e.OldItems)
-                        {
-                            if (dropDown.SelectedItem.Equals(removedItem.ToString()))
-                            {
-                                dropDown.SelectedItem = _placeholderRoleName;
-                            }
-                            dropDown.Items.Remove(removedItem.ToString());
-                        }
-                    }
-                    else
-                    {
-                        foreach (var newItem in e.NewItems)
-                        {
-                            dropDown.Items.Add(newItem.ToString());
-                        }
-                    }
-                }
-            }
-        }
 
         private void SetupPlaceholderPlayers()
         {
@@ -380,18 +343,6 @@ namespace Blish_HUD_Module1
                 }
 
             };
-        }
-
-        private void PlayerAddedEvent(CommonFields.Player player)
-        {
-            UpdateSquadMembers();
-        }
-
-        private void PlayerRemovedEvent(CommonFields.Player player)
-        {
-            _players = (ConcurrentDictionary<string, CommonFields.Player>)GameService.ArcDps.Common.PlayersInSquad;
-            //_playersDetails.Remove(_playersDetails.Find(x => x.Text.Equals(player.CharacterName)));
-            _squadMembersPanel.Children.Where(x => ((DetailsButton)x).Text.Equals(player.CharacterName)).FirstOrDefault().Parent = _formerSquadMembersPanel;
         }
     }
 
