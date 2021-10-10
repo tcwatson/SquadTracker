@@ -236,6 +236,12 @@ namespace Blish_HUD_Module1
                 Title = "Former Squad Members",
                 ShowBorder = true
             };
+            var clearButton = new StandardButton
+            {
+                Parent = basePanel,
+                Text = "Clear",
+                Location = new Point(_formerSquadMembersPanel.Right - 135, _formerSquadMembersPanel.Top + 5)
+            };
         }
 
         protected override void Update(GameTime gameTime)
