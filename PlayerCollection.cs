@@ -52,6 +52,19 @@ namespace Tyler.Blish_HUD_Module1
             playerToRemove.RemovePlayerFromActivePanel();
         }
 
+        public void ClearFormerPlayers()
+        {
+            foreach (var player in _players)
+            {
+                if (player.IsFormerSquadMember)
+                {
+                    //set to invisible? delete button somehow?
+                    //setting invisible means it still exists in the collection, and that same player can't be re-added again, unless I make it visible again
+                    player.MakeInvisible();
+                }
+            }
+        }
+
         private CommonFields.Player GetArcPlayer(string characterName)
         {
             return _arcPlayersInSquad.First(x => x.Value.CharacterName.Equals(characterName)).Value;
@@ -107,6 +120,11 @@ namespace Tyler.Blish_HUD_Module1
         public void MoveFormerSquadMemberToActivePanel()
         {
             _detailsButton.Parent = _activePlayerPanel;
+        }
+
+        public void MakeInvisible()
+        {
+            _detailsButton.Visible = false;
         }
 
         private void CreateDetailsButton()

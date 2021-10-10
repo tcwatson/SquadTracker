@@ -242,6 +242,10 @@ namespace Blish_HUD_Module1
                 Text = "Clear",
                 Location = new Point(_formerSquadMembersPanel.Right - 135, _formerSquadMembersPanel.Top + 5)
             };
+            clearButton.Click += delegate
+            {
+                _playerCollection.ClearFormerPlayers();
+            };
         }
 
         protected override void Update(GameTime gameTime)
