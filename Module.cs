@@ -15,9 +15,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Tyler.Blish_HUD_Module1;
 
-//todo - changing maps puts current player in former squad members. 
-//todo - added members don't get the added dropdown items
-
 namespace Blish_HUD_Module1
 {
     [Export(typeof(Blish_HUD.Modules.Module))]
