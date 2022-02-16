@@ -11,9 +11,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel.Composition;
-using System.Linq;
 using System.Threading.Tasks;
-using Tyler.Blish_HUD_Module1;
+using Torlando.SquadTracker;
 
 namespace Blish_HUD_Module1
 {
@@ -24,7 +23,6 @@ namespace Blish_HUD_Module1
         private static readonly Logger Logger = Logger.GetLogger<Module>();
 
         private ObservableCollection<string> _customRoles = new ObservableCollection<string>();
-        private const string _placeholderRoleName = "Select a role...";
 
         #region Service Managers
         internal SettingsManager SettingsManager => this.ModuleParameters.SettingsManager;
@@ -263,7 +261,6 @@ namespace Blish_HUD_Module1
 
         private async Task<Blish_HUD.Content.AsyncTexture2D> GetSpecializationIcon(CommonFields.Player player)
         {
-            // todo icon for core specs? throws null refernce?
             var connection = new Gw2Sharp.Connection();
             using var client = new Gw2Sharp.Gw2Client(connection);
             var webApiClient = client.WebApi.V2;

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blish HUD Module1", "Blish HUD Module1.csproj", "{4F5D4893-373F-42F5-9482-CBDC8F8A3449}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SquadTracker", "SquadTracker.csproj", "{4F5D4893-373F-42F5-9482-CBDC8F8A3449}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

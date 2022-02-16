@@ -1,17 +1,13 @@
-﻿using Blish_HUD;
-using Blish_HUD.ArcDps.Common;
+﻿using Blish_HUD.ArcDps.Common;
 using Blish_HUD.Controls;
 using Microsoft.Xna.Framework;
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Tyler.Blish_HUD_Module1
+namespace Torlando.SquadTracker
 {
     public class PlayerCollection
     {
