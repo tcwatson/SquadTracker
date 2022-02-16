@@ -90,7 +90,11 @@ namespace Blish_HUD_Module1
             GameService.ArcDps.Common.PlayerAdded += PlayerAddedEvent;
             GameService.ArcDps.Common.PlayerRemoved += PlayerRemovedEvent;
             _playerCollection = new PlayerCollection(_arcPlayers, _squadMembersPanel, _formerSquadMembersPanel);
-            
+            var predefinedRoles = new List<string>
+            {
+                "Quickness", "Alacrity", "Heal", "Power DPS", "Condi DPS"
+            };
+            predefinedRoles.ForEach(x => AddRole(x));
 
             // Base handler must be called
             base.OnModuleLoaded(e);
@@ -151,27 +155,7 @@ namespace Blish_HUD_Module1
             };
             addButton.Click += delegate
             {
-                _customRoles.Add(newRole.Text);
-                var newRoleButton = new DetailsButton
-                {
-                    Parent = _squadRolesFlowPanel,
-                    Text = newRole.Text,
-                    HighlightType = DetailsHighlightType.LightHighlight,
-                    ShowVignette = false,
-                    ShowToggleButton = true
-                };
-                var removeButton = new StandardButton
-                {
-                    Parent = newRoleButton,
-                    //Location = new Point(newRoleButton.Right, newRoleButton.Top),
-                    Text = "Remove"
-                };
-                removeButton.Click += delegate
-                {
-                    _customRoles.Remove(newRole.Text);
-                    _squadRolesFlowPanel.RemoveChild(newRoleButton);
-                };
-
+                AddRole(newRole.Text);
                 newRole.Text = string.Empty;
             };
 
@@ -246,6 +230,30 @@ namespace Blish_HUD_Module1
             //{
             //    _playerCollection.ClearFormerPlayers();
             //};
+        }
+
+        private void AddRole(string roleText)
+        {
+            _customRoles.Add(roleText);
+            var newRoleButton = new DetailsButton
+            {
+                Parent = _squadRolesFlowPanel,
+                Text = roleText,
+                HighlightType = DetailsHighlightType.LightHighlight,
+                ShowVignette = false,
+                ShowToggleButton = true
+            };
+            var removeButton = new StandardButton
+            {
+                Parent = newRoleButton,
+                //Location = new Point(newRoleButton.Right, newRoleButton.Top),
+                Text = "Remove"
+            };
+            removeButton.Click += delegate
+            {
+                _customRoles.Remove(roleText);
+                _squadRolesFlowPanel.RemoveChild(newRoleButton);
+            };
         }
 
         protected override void Update(GameTime gameTime)
