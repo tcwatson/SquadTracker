@@ -41,6 +41,7 @@ namespace Blish_HUD_Module1
         private MenuItem _squadMembersMenu;
         private MenuItem _squadRolesMenu;
         private Panel _menu;
+        private StandardButton _clearFormerSquadButton;
         private List<DetailsButton> _playersDetails = new List<DetailsButton>();
 
         #endregion
@@ -162,12 +163,14 @@ namespace Blish_HUD_Module1
             _squadMembersMenu.Click += delegate { 
                 _squadMembersPanel.Visible = true;
                 _formerSquadMembersPanel.Visible = true;
-                _squadRolePanel.Visible = false; 
+                _squadRolePanel.Visible = false;
+                _clearFormerSquadButton.Visible = true;
             };
             _squadRolesMenu.Click += delegate { 
                 _squadMembersPanel.Visible = false;
                 _squadRolePanel.Visible = true;
                 _formerSquadMembersPanel.Visible = false;
+                _clearFormerSquadButton.Visible = false;
             };
 
             _squadMembersPanel.BasicTooltipText = "You loaded Blish HUD after starting Guild Wars 2. Please change maps to refresh.";
@@ -220,16 +223,16 @@ namespace Blish_HUD_Module1
                 Title = "Former Squad Members",
                 ShowBorder = true
             };
-            //var clearFormerSquadButton = new StandardButton
-            //{
-            //    Parent = basePanel,
-            //    Text = "Clear",
-            //    Location = new Point(_formerSquadMembersPanel.Right - 135, _formerSquadMembersPanel.Top + 5)
-            //};
-            //clearFormerSquadButton.Click += delegate
-            //{
-            //    _playerCollection.ClearFormerPlayers();
-            //};
+            _clearFormerSquadButton = new StandardButton
+            {
+                Parent = basePanel,
+                Text = "Clear",
+                Location = new Point(_formerSquadMembersPanel.Right - 135, _formerSquadMembersPanel.Top + 5)
+            };
+            _clearFormerSquadButton.Click += delegate
+            {
+                _playerCollection.ClearFormerPlayers();
+            };
         }
 
         private void AddRole(string roleText)
