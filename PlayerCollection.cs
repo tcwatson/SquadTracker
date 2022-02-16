@@ -90,7 +90,7 @@ namespace Tyler.Blish_HUD_Module1
         #endregion
 
         public string CharacterName => _arcPlayer.CharacterName;
-        public bool IsFormerSquadMember => _detailsButton.Parent.Equals(_formerPlayerPanel);
+        public bool IsFormerSquadMember => _detailsButton.Parent?.Equals(_formerPlayerPanel) ?? false;
         public bool IsSelf => _arcPlayer.Self;
         public Player(Panel activePlayerPanel, 
             Panel formerPlayerPanel, CommonFields.Player arcPlayer, Blish_HUD.Content.AsyncTexture2D icon, ObservableCollection<string> availableRoles)
