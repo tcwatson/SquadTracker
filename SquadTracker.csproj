@@ -134,6 +134,7 @@
   <ItemGroup>
     <Compile Include="Module.cs" />
     <Compile Include="PlayerCollection.cs" />
+    <Compile Include="Role.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="AsyncClipboardService, Version=1.7.1.0, Culture=neutral, processorArchitecture=MSIL">

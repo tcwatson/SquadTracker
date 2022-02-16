@@ -91,9 +91,13 @@ namespace Blish_HUD_Module1
             GameService.ArcDps.Common.PlayerAdded += PlayerAddedEvent;
             GameService.ArcDps.Common.PlayerRemoved += PlayerRemovedEvent;
             _playerCollection = new PlayerCollection(_arcPlayers, _squadMembersPanel, _formerSquadMembersPanel);
-            var predefinedRoles = new List<string>
+            var predefinedRoles = new List<Role>
             {
-                "Quickness", "Alacrity", "Heal", "Power DPS", "Condi DPS"
+                new Role ("Quickness", ContentsManager.GetTexture(@"icons\quickness.png")),
+                new Role ("Alacrity", ContentsManager.GetTexture(@"icons\alacrity.png")),
+                new Role ("Heal", ContentsManager.GetTexture(@"icons\regeneration.png")),
+                new Role ("Power DPS", ContentsManager.GetTexture(@"icons\power.png")),
+                new Role ("Condi DPS", ContentsManager.GetTexture(@"icons\Condition_Damage.png"))
             };
             predefinedRoles.ForEach(x => AddRole(x));
 
@@ -152,11 +156,12 @@ namespace Blish_HUD_Module1
                 Title = "Currently Defined Roles",
                 Size = new Point(panel.Width - _menu.Width - 5, panel.Height),
                 CanScroll = true,
-                ShowBorder = true
+                ShowBorder = true,
+                ControlPadding = new Vector2(8, 8)
             };
             addButton.Click += delegate
             {
-                AddRole(newRole.Text);
+                AddRole(new Role(newRole.Text));
                 newRole.Text = string.Empty;
             };
 
@@ -235,16 +240,18 @@ namespace Blish_HUD_Module1
             };
         }
 
-        private void AddRole(string roleText)
+        private void AddRole(Role role)
         {
-            _customRoles.Add(roleText);
+            _customRoles.Add(role.Name);
             var newRoleButton = new DetailsButton
             {
                 Parent = _squadRolesFlowPanel,
-                Text = roleText,
+                Text = role.Name,
                 HighlightType = DetailsHighlightType.LightHighlight,
-                ShowVignette = false,
-                ShowToggleButton = true
+                ShowVignette = true,
+                ShowToggleButton = true,
+                Icon = role.Icon,
+                IconSize = DetailsIconSize.Small
             };
             var removeButton = new StandardButton
             {
@@ -254,7 +261,7 @@ namespace Blish_HUD_Module1
             };
             removeButton.Click += delegate
             {
-                _customRoles.Remove(roleText);
+                _customRoles.Remove(role.Name);
                 _squadRolesFlowPanel.RemoveChild(newRoleButton);
             };
         }
