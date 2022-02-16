@@ -36,6 +36,7 @@ namespace Blish_HUD_Module1
         private Panel _tabPanel;
         private FlowPanel _squadMembersPanel;
         private FlowPanel _formerSquadMembersPanel;
+        private FlowPanel _squadRolesFlowPanel;
         private Panel _squadRolePanel;
         private MenuItem _squadMembersMenu;
         private MenuItem _squadRolesMenu;
@@ -123,7 +124,7 @@ namespace Blish_HUD_Module1
             {
                 Parent = panel,
                 Location = new Point(_menu.Right + 10, _menu.Top),
-                Size = new Point(500, 500),
+                Size = new Point(panel.Width, panel.Height),
                 Visible = false
             };
             var newRole = new TextBox
@@ -137,21 +138,23 @@ namespace Blish_HUD_Module1
                 Text = "Add",
                 Location = new Point (newRole.Right + 50, _squadRolePanel.Top)
             };
-           
 
-            var existingRoles = new FlowPanel
+
+            _squadRolesFlowPanel = new FlowPanel
             {
                 Parent = _squadRolePanel,
                 Location = new Point(newRole.Left, newRole.Bottom + 10),
                 Title = "Currently Defined Roles",
-                Size = new Point(500, 500)
+                Size = new Point(panel.Width - _menu.Width - 5, panel.Height),
+                CanScroll = true,
+                ShowBorder = true
             };
             addButton.Click += delegate
             {
                 _customRoles.Add(newRole.Text);
                 var newRoleButton = new DetailsButton
                 {
-                    Parent = existingRoles,
+                    Parent = _squadRolesFlowPanel,
                     Text = newRole.Text,
                     HighlightType = DetailsHighlightType.LightHighlight,
                     ShowVignette = false,
@@ -166,7 +169,7 @@ namespace Blish_HUD_Module1
                 removeButton.Click += delegate
                 {
                     _customRoles.Remove(newRole.Text);
-                    existingRoles.RemoveChild(newRoleButton);
+                    _squadRolesFlowPanel.RemoveChild(newRoleButton);
                 };
 
                 newRole.Text = string.Empty;
@@ -233,16 +236,16 @@ namespace Blish_HUD_Module1
                 Title = "Former Squad Members",
                 ShowBorder = true
             };
-            var clearButton = new StandardButton
-            {
-                Parent = basePanel,
-                Text = "Clear",
-                Location = new Point(_formerSquadMembersPanel.Right - 135, _formerSquadMembersPanel.Top + 5)
-            };
-            clearButton.Click += delegate
-            {
-                _playerCollection.ClearFormerPlayers();
-            };
+            //var clearFormerSquadButton = new StandardButton
+            //{
+            //    Parent = basePanel,
+            //    Text = "Clear",
+            //    Location = new Point(_formerSquadMembersPanel.Right - 135, _formerSquadMembersPanel.Top + 5)
+            //};
+            //clearFormerSquadButton.Click += delegate
+            //{
+            //    _playerCollection.ClearFormerPlayers();
+            //};
         }
 
         protected override void Update(GameTime gameTime)
