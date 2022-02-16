@@ -86,7 +86,7 @@ namespace Blish_HUD_Module1
         /// </summary>
         protected override void OnModuleLoaded(EventArgs e)
         {
-            _windowTab = GameService.Overlay.BlishHudWindow.AddTab("testTab", ContentsManager.GetTexture(@"textures\1466345.png"), _tabPanel);
+            _windowTab = GameService.Overlay.BlishHudWindow.AddTab("Squad Tracker", ContentsManager.GetTexture(@"textures\1466345.png"), _tabPanel);
             GameService.ArcDps.Common.Activate();
             GameService.ArcDps.Common.PlayerAdded += PlayerAddedEvent;
             GameService.ArcDps.Common.PlayerRemoved += PlayerRemovedEvent;
@@ -102,6 +102,7 @@ namespace Blish_HUD_Module1
             _arcPlayers = (ConcurrentDictionary<string, CommonFields.Player>)GameService.ArcDps.Common.PlayersInSquad;
             var icon = GetSpecializationIcon(player);
             await _playerCollection.AddPlayer(player, icon, _customRoles);
+            _squadMembersPanel.BasicTooltipText = "";
         }
 
         private void PlayerRemovedEvent(CommonFields.Player player)
@@ -184,7 +185,8 @@ namespace Blish_HUD_Module1
                 _formerSquadMembersPanel.Visible = false;
             };
 
-            SetupPlaceholderPlayers();
+            _squadMembersPanel.BasicTooltipText = "You loaded Blish HUD after starting Guild Wars 2. Please change maps to refresh.";
+            //SetupPlaceholderPlayers();
 
             return panel;
         }
@@ -193,7 +195,7 @@ namespace Blish_HUD_Module1
         {
             _menu = new Panel
             {
-                Title = "my menu",
+                Title = "Squad Tracker Menu",
                 ShowBorder = true,
                 Size = Panel.MenuStandard.Size,
                 Parent = basePanel
@@ -282,6 +284,9 @@ namespace Blish_HUD_Module1
 
 
 
+        /// <summary>
+        /// Call this from BuildPanel() for testing with placeholder characters
+        /// </summary>
         private void SetupPlaceholderPlayers()
         {
             var placeHolderPlayer = new DetailsButton
