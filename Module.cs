@@ -107,11 +107,10 @@ namespace Blish_HUD_Module1
             base.OnModuleLoaded(e);
         }
 
-        private async void PlayerAddedEvent(CommonFields.Player player)
+        private void PlayerAddedEvent(CommonFields.Player player)
         {
             _arcPlayers = (ConcurrentDictionary<string, CommonFields.Player>)GameService.ArcDps.Common.PlayersInSquad;
-            var icon = GetSpecializationIcon(player);
-            await _playerCollection.AddPlayer(player, icon, _customRoles);
+            _playerCollection.AddPlayer(player, GetSpecializationIcon, _customRoles);
             _squadMembersPanel.BasicTooltipText = "";
         }
 
@@ -288,22 +287,22 @@ namespace Blish_HUD_Module1
             // All static members must be manually unset
         }
 
-        private async Task<Blish_HUD.Content.AsyncTexture2D> GetSpecializationIcon(CommonFields.Player player)
+        private async Task<Blish_HUD.Content.AsyncTexture2D> GetSpecializationIcon(uint professionCode, uint specializationCode)
         {
             var connection = new Gw2Sharp.Connection();
             using var client = new Gw2Sharp.Gw2Client(connection);
             var webApiClient = client.WebApi.V2;
             var specializationClient = webApiClient.Specializations;
             var professionsClient = webApiClient.Professions;
-            if (player.Elite == 0)
+            if (specializationCode == 0)
             {
-                int playerProfession = (int) player.Profession;
+                int playerProfession = (int)professionCode;
                 var allProffesions = await professionsClient.AllAsync();
                 var proffessionId = allProffesions[playerProfession - 1].Id;
                 var profession = await professionsClient.GetAsync(proffessionId);
                 return GameService.Content.GetRenderServiceTexture(profession.IconBig);
             }
-            var eliteSpec = await specializationClient.GetAsync((int)player.Elite);
+            var eliteSpec = await specializationClient.GetAsync((int)specializationCode);
             return GameService.Content.GetRenderServiceTexture(eliteSpec.ProfessionIconBig);
         }
 

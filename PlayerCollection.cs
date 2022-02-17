@@ -1,10 +1,13 @@
 using Blish_HUD.ArcDps.Common;
+using Blish_HUD.Content;
 using Blish_HUD.Controls;
 using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -28,7 +31,7 @@ namespace Torlando.SquadTracker
             _formerPlayerPanel = formerPlayerPanel;
         }
 
-        public async Task AddPlayer(CommonFields.Player arcPlayer, Task<Blish_HUD.Content.AsyncTexture2D> icon, ObservableCollection<string> availableRoles)
+        public void AddPlayer(CommonFields.Player arcPlayer, Func<uint, uint, AsyncTexture2D> iconGetter, ObservableCollection<string> availableRoles)
         {
             if (_players.ContainsKey(arcPlayer.CharacterName))
             {
@@ -45,7 +48,7 @@ namespace Torlando.SquadTracker
             var player = new Player(arcPlayer.AccountName, isSelf: arcPlayer.Self, characterName: arcPlayer.CharacterName, profession: arcPlayer.Profession, currentSpecialization: arcPlayer.Elite);
 
             _players.Add(player.CharacterName, player);
-            _playerDisplays.Add(new PlayerDisplay(_activePlayerPanel, _formerPlayerPanel, player, await icon, availableRoles));
+            _playerDisplays.Add(new PlayerDisplay(_activePlayerPanel, _formerPlayerPanel, player, iconGetter, availableRoles));
         }
 
         public void UpdatePlayerSpecialization(string characterName, uint newSpec)
@@ -97,7 +100,7 @@ namespace Torlando.SquadTracker
         private Dropdown _dropdown2;
         private Panel _activePlayerPanel;
         private Panel _formerPlayerPanel;
-        private Blish_HUD.Content.AsyncTexture2D _icon;
+        private Func<uint, uint, AsyncTexture2D> _iconGetter;
         private const string _placeholderRoleName = "Select a role...";
         #endregion
 
@@ -105,15 +108,17 @@ namespace Torlando.SquadTracker
         public bool IsFormerSquadMember => _detailsButton.Parent?.Equals(_formerPlayerPanel) ?? false;
         public bool IsSelf => _player.IsSelf;
         public PlayerDisplay(Panel activePlayerPanel,
-            Panel formerPlayerPanel, Player player, Blish_HUD.Content.AsyncTexture2D icon, ObservableCollection<string> availableRoles)
+            Panel formerPlayerPanel, Player player, Func<uint, uint, AsyncTexture2D> iconGetter, ObservableCollection<string> availableRoles)
         {
             _activePlayerPanel = activePlayerPanel;
             _formerPlayerPanel = formerPlayerPanel;
             _player = player;
-            _icon = icon;
+            _iconGetter = iconGetter;
             _availableRoles = availableRoles;
             CreateDetailsButton();
             _availableRoles.CollectionChanged += UpdateDropdowns;
+
+            player.PropertyChanged += UpdateDetailsButton;
         }
 
         public void RemovePlayerFromActivePanel()
@@ -134,6 +139,7 @@ namespace Torlando.SquadTracker
         public void DisposeDetailsButton()
         {
             _detailsButton.Dispose();
+            _player.PropertyChanged -= UpdateDetailsButton;
         }
 
         private void CreateDetailsButton()
@@ -146,11 +152,17 @@ namespace Torlando.SquadTracker
                 ShowVignette = true,
                 HighlightType = DetailsHighlightType.LightHighlight,
                 ShowToggleButton = true,
-                Icon = _icon,
+                Icon = _iconGetter(_player.Profession, _player.CurrentSpecialization),
                 Size = new Point(354, 90)
             };
             _dropdown1 = CreateDropdown();
             _dropdown2 = CreateDropdown();
+        }
+
+        private void UpdateDetailsButton(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName != nameof(Player.CurrentSpecialization)) return;
+            _detailsButton.Icon = _iconGetter(_player.Profession, _player.CurrentSpecialization);
         }
 
         private Dropdown CreateDropdown()
