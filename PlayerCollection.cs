@@ -1,7 +1,8 @@
-﻿using Blish_HUD.ArcDps.Common;
+using Blish_HUD.ArcDps.Common;
 using Blish_HUD.Controls;
 using Microsoft.Xna.Framework;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace Torlando.SquadTracker
     public class PlayerCollection
     {
         private ObservableCollection<PlayerDisplay> _playerDisplays;
+        private IDictionary<string, Player> _players;
         private ConcurrentDictionary<string, CommonFields.Player> _arcPlayersInSquad;
 
         private Panel _activePlayerPanel;
@@ -20,6 +22,7 @@ namespace Torlando.SquadTracker
         public PlayerCollection(ConcurrentDictionary<string, CommonFields.Player> arcPlayersInSquad, Panel activePlayerPanel, Panel formerPlayerPanel)
         {
             _playerDisplays = new ObservableCollection<PlayerDisplay>();
+            _players = new ConcurrentDictionary<string, Player>();
             _arcPlayersInSquad = arcPlayersInSquad;
             _activePlayerPanel = activePlayerPanel;
             _formerPlayerPanel = formerPlayerPanel;
@@ -27,7 +30,7 @@ namespace Torlando.SquadTracker
 
         public async Task AddPlayer(CommonFields.Player arcPlayer, Task<Blish_HUD.Content.AsyncTexture2D> icon, ObservableCollection<string> availableRoles)
         {
-            if (_playerDisplays.Any(x => x.CharacterName.Equals(arcPlayer.CharacterName)))
+            if (_players.ContainsKey(arcPlayer.CharacterName))
             {
                 // Move from former players if player rejoined
                 var playerDisplay = GetPlayer(arcPlayer);
@@ -38,7 +41,11 @@ namespace Torlando.SquadTracker
                 //Don't add duplicate player
                 return;
             }
-            _playerDisplays.Add(new PlayerDisplay(_activePlayerPanel, _formerPlayerPanel, arcPlayer, await icon, availableRoles));
+
+            var player = new Player(arcPlayer.AccountName, isSelf: arcPlayer.Self, characterName: arcPlayer.CharacterName, profession: arcPlayer.Profession, currentSpecialization: arcPlayer.Elite);
+
+            _players.Add(player.CharacterName, player);
+            _playerDisplays.Add(new PlayerDisplay(_activePlayerPanel, _formerPlayerPanel, player, await icon, availableRoles));
         }
 
         public void RemovePlayerFromActivePanel(CommonFields.Player arcPlayer)
@@ -71,7 +78,7 @@ namespace Torlando.SquadTracker
     public class PlayerDisplay
     {
         #region Data
-        private CommonFields.Player _arcPlayer;
+        private Player _player;
         private ObservableCollection<string> _availableRoles;
         #endregion
 
@@ -85,15 +92,15 @@ namespace Torlando.SquadTracker
         private const string _placeholderRoleName = "Select a role...";
         #endregion
 
-        public string CharacterName => _arcPlayer.CharacterName;
+        public string CharacterName => _player.CharacterName;
         public bool IsFormerSquadMember => _detailsButton.Parent?.Equals(_formerPlayerPanel) ?? false;
-        public bool IsSelf => _arcPlayer.Self;
+        public bool IsSelf => _player.IsSelf;
         public PlayerDisplay(Panel activePlayerPanel,
-            Panel formerPlayerPanel, CommonFields.Player arcPlayer, Blish_HUD.Content.AsyncTexture2D icon, ObservableCollection<string> availableRoles)
+            Panel formerPlayerPanel, Player player, Blish_HUD.Content.AsyncTexture2D icon, ObservableCollection<string> availableRoles)
         {
             _activePlayerPanel = activePlayerPanel;
             _formerPlayerPanel = formerPlayerPanel;
-            _arcPlayer = arcPlayer;
+            _player = player;
             _icon = icon;
             _availableRoles = availableRoles;
             CreateDetailsButton();
@@ -125,7 +132,7 @@ namespace Torlando.SquadTracker
             _detailsButton = new DetailsButton
             {
                 Parent = _activePlayerPanel,
-                Text = $"{_arcPlayer.CharacterName} ({_arcPlayer.AccountName})",
+                Text = $"{_player.CharacterName} ({_player.AccountName})",
                 IconSize = DetailsIconSize.Small,
                 ShowVignette = true,
                 HighlightType = DetailsHighlightType.LightHighlight,
