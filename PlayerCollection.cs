@@ -1,4 +1,4 @@
-using Blish_HUD.ArcDps.Common;
+﻿using Blish_HUD.ArcDps.Common;
 using Blish_HUD.Content;
 using Blish_HUD.Controls;
 using Microsoft.Xna.Framework;
