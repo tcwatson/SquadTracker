@@ -11,7 +11,7 @@ namespace Torlando.SquadTracker
 {
     public class PlayerCollection
     {
-        private ObservableCollection<Player> _players;
+        private ObservableCollection<PlayerDisplay> _playerDisplays;
         private ConcurrentDictionary<string, CommonFields.Player> _arcPlayersInSquad;
 
         private Panel _activePlayerPanel;
@@ -19,7 +19,7 @@ namespace Torlando.SquadTracker
 
         public PlayerCollection(ConcurrentDictionary<string, CommonFields.Player> arcPlayersInSquad, Panel activePlayerPanel, Panel formerPlayerPanel)
         {
-            _players = new ObservableCollection<Player>();
+            _playerDisplays = new ObservableCollection<PlayerDisplay>();
             _arcPlayersInSquad = arcPlayersInSquad;
             _activePlayerPanel = activePlayerPanel;
             _formerPlayerPanel = formerPlayerPanel;
@@ -27,18 +27,18 @@ namespace Torlando.SquadTracker
 
         public async Task AddPlayer(CommonFields.Player arcPlayer, Task<Blish_HUD.Content.AsyncTexture2D> icon, ObservableCollection<string> availableRoles)
         {
-            if (_players.Any(x => x.CharacterName.Equals(arcPlayer.CharacterName)))
+            if (_playerDisplays.Any(x => x.CharacterName.Equals(arcPlayer.CharacterName)))
             {
                 // Move from former players if player rejoined
-                var player = GetPlayer(arcPlayer);
-                if (player?.IsFormerSquadMember ?? false)
+                var playerDisplay = GetPlayer(arcPlayer);
+                if (playerDisplay?.IsFormerSquadMember ?? false)
                 {
-                    player.MoveFormerSquadMemberToActivePanel();
+                    playerDisplay.MoveFormerSquadMemberToActivePanel();
                 }
                 //Don't add duplicate player
                 return;
             }
-            _players.Add(new Player(_activePlayerPanel, _formerPlayerPanel, arcPlayer, await icon, availableRoles));
+            _playerDisplays.Add(new PlayerDisplay(_activePlayerPanel, _formerPlayerPanel, arcPlayer, await icon, availableRoles));
         }
 
         public void RemovePlayerFromActivePanel(CommonFields.Player arcPlayer)
@@ -50,7 +50,7 @@ namespace Torlando.SquadTracker
 
         public void ClearFormerPlayers()
         {
-            foreach (var player in _players)
+            foreach (var player in _playerDisplays)
             {
                 if (player.IsFormerSquadMember)
                     player.DisposeDetailsButton(); //todo - test this
@@ -62,13 +62,13 @@ namespace Torlando.SquadTracker
             return _arcPlayersInSquad.First(x => x.Value.CharacterName.Equals(characterName)).Value;
         }
 
-        private Player GetPlayer(CommonFields.Player arcPlayer)
+        private PlayerDisplay GetPlayer(CommonFields.Player arcPlayer)
         {
-            return _players.First(x => x.CharacterName.Equals(arcPlayer.CharacterName));
+            return _playerDisplays.First(x => x.CharacterName.Equals(arcPlayer.CharacterName));
         }
     }
 
-    public class Player
+    public class PlayerDisplay
     {
         #region Data
         private CommonFields.Player _arcPlayer;
@@ -88,7 +88,7 @@ namespace Torlando.SquadTracker
         public string CharacterName => _arcPlayer.CharacterName;
         public bool IsFormerSquadMember => _detailsButton.Parent?.Equals(_formerPlayerPanel) ?? false;
         public bool IsSelf => _arcPlayer.Self;
-        public Player(Panel activePlayerPanel, 
+        public PlayerDisplay(Panel activePlayerPanel,
             Panel formerPlayerPanel, CommonFields.Player arcPlayer, Blish_HUD.Content.AsyncTexture2D icon, ObservableCollection<string> availableRoles)
         {
             _activePlayerPanel = activePlayerPanel;
