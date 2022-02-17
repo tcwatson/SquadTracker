@@ -48,6 +48,15 @@ namespace Torlando.SquadTracker
             _playerDisplays.Add(new PlayerDisplay(_activePlayerPanel, _formerPlayerPanel, player, await icon, availableRoles));
         }
 
+        public void UpdatePlayerSpecialization(string characterName, uint newSpec)
+        {
+            var hasPlayer = _players.TryGetValue(characterName, out var player);
+            if (!hasPlayer) return;
+            if (player.CurrentSpecialization == newSpec) return;
+
+            player.CurrentSpecialization = newSpec;
+        }
+
         public void RemovePlayerFromActivePanel(CommonFields.Player arcPlayer)
         {
             //if (arcPlayer.Self && !_players.Any(x => x.IsSelf)) return; //Don't remove yourself, unless you changed characters

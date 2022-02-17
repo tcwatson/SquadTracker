@@ -1,4 +1,5 @@
-﻿using Blish_HUD;
+using Blish_HUD;
+using Blish_HUD.ArcDps;
 using Blish_HUD.ArcDps.Common;
 using Blish_HUD.Controls;
 using Blish_HUD.Modules;
@@ -90,6 +91,7 @@ namespace Blish_HUD_Module1
             GameService.ArcDps.Common.Activate();
             GameService.ArcDps.Common.PlayerAdded += PlayerAddedEvent;
             GameService.ArcDps.Common.PlayerRemoved += PlayerRemovedEvent;
+            GameService.ArcDps.RawCombatEvent += RawCombatEvent;
             _playerCollection = new PlayerCollection(_arcPlayers, _squadMembersPanel, _formerSquadMembersPanel);
             var predefinedRoles = new List<Role>
             {
@@ -111,6 +113,12 @@ namespace Blish_HUD_Module1
             var icon = GetSpecializationIcon(player);
             await _playerCollection.AddPlayer(player, icon, _customRoles);
             _squadMembersPanel.BasicTooltipText = "";
+        }
+
+        private void RawCombatEvent(object sender, RawCombatEventArgs e)
+        {
+            var ag = e.CombatEvent.Src;
+            _playerCollection.UpdatePlayerSpecialization(ag.Name, ag.Elite);
         }
 
         private void PlayerRemovedEvent(CommonFields.Player player)
