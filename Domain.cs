@@ -39,6 +39,7 @@ namespace Torlando.SquadTracker
 
         private void OnPropertyChanged([CallerMemberName] string name = null)
         {
+            if (((PlayerDisplay)PropertyChanged?.Target)?.IsFormerSquadMember ?? false) return;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
