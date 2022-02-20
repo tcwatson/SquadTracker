@@ -120,7 +120,7 @@ namespace Blish_HUD_Module1
         /// </summary>
         protected override void OnModuleLoaded(EventArgs e)
         {
-            _windowTab = GameService.Overlay.BlishHudWindow.AddTab("Squad Tracker", ContentsManager.GetTexture(@"textures\1466345.png"), _tabPanel);
+            _windowTab = GameService.Overlay.BlishHudWindow.AddTab("Squad Tracker", ContentsManager.GetTexture(@"textures\commandertag.png"), _tabPanel);
             GameService.ArcDps.Common.Activate();
             GameService.ArcDps.Common.PlayerAdded += PlayerAddedEvent;
             GameService.ArcDps.Common.PlayerRemoved += PlayerRemovedEvent;
