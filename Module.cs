@@ -1,5 +1,7 @@
 ﻿using Blish_HUD;
+using Blish_HUD.ArcDps;
 using Blish_HUD.ArcDps.Common;
+using Blish_HUD.Content;
 using Blish_HUD.Controls;
 using Blish_HUD.Modules;
 using Blish_HUD.Modules.Managers;
@@ -11,6 +13,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel.Composition;
+using System.Linq;
 using System.Threading.Tasks;
 using Torlando.SquadTracker;
 
@@ -29,6 +32,13 @@ namespace Blish_HUD_Module1
         internal ContentsManager ContentsManager => this.ModuleParameters.ContentsManager;
         internal DirectoriesManager DirectoriesManager => this.ModuleParameters.DirectoriesManager;
         internal Gw2ApiManager Gw2ApiManager => this.ModuleParameters.Gw2ApiManager;
+        #endregion
+
+        #region Textures
+
+        private IReadOnlyDictionary<uint, AsyncTexture2D> _professionIcons;
+        private IReadOnlyDictionary<uint, AsyncTexture2D> _specializationIcons;
+
         #endregion
 
         #region Controls
@@ -77,6 +87,30 @@ namespace Blish_HUD_Module1
         protected override async Task LoadAsync()
         {
             _tabPanel = BuildPanel(GameService.Overlay.BlishHudWindow.ContentRegion);
+             await LoadSpecializationIconsAsync();
+        }
+
+        private async Task LoadSpecializationIconsAsync()
+        {
+            var connection = new Gw2Sharp.Connection();
+            using var client = new Gw2Sharp.Gw2Client(connection);
+            var webApiClient = client.WebApi.V2;
+
+            var professionsClient = webApiClient.Professions;
+            var professions = await professionsClient.AllAsync();
+
+            _professionIcons = professions.ToDictionary(
+                keySelector: (profession) => (uint)profession.Code,
+                (profession) => GameService.Content.GetRenderServiceTexture(profession.IconBig)
+            );
+
+            var specializationClient = webApiClient.Specializations;
+            var eliteSpecs = await specializationClient.ManyAsync(EliteSpecializationCodes);
+
+            _specializationIcons = eliteSpecs.ToDictionary(
+                keySelector: (spec) => (uint)spec.Id,
+                (spec) => GameService.Content.GetRenderServiceTexture(spec.ProfessionIconBig)
+            );
         }
 
         /// <summary>
@@ -90,6 +124,7 @@ namespace Blish_HUD_Module1
             GameService.ArcDps.Common.Activate();
             GameService.ArcDps.Common.PlayerAdded += PlayerAddedEvent;
             GameService.ArcDps.Common.PlayerRemoved += PlayerRemovedEvent;
+            GameService.ArcDps.RawCombatEvent += RawCombatEvent;
             _playerCollection = new PlayerCollection(_arcPlayers, _squadMembersPanel, _formerSquadMembersPanel);
             var predefinedRoles = new List<Role>
             {
@@ -105,12 +140,17 @@ namespace Blish_HUD_Module1
             base.OnModuleLoaded(e);
         }
 
-        private async void PlayerAddedEvent(CommonFields.Player player)
+        private void PlayerAddedEvent(CommonFields.Player player)
         {
             _arcPlayers = (ConcurrentDictionary<string, CommonFields.Player>)GameService.ArcDps.Common.PlayersInSquad;
-            var icon = GetSpecializationIcon(player);
-            await _playerCollection.AddPlayer(player, icon, _customRoles);
+            _playerCollection.AddPlayer(player, GetSpecializationIcon, _customRoles);
             _squadMembersPanel.BasicTooltipText = "";
+        }
+
+        private void RawCombatEvent(object sender, RawCombatEventArgs e)
+        {
+            var ag = e.CombatEvent.Src;
+            _playerCollection.UpdatePlayerSpecialization(ag.Name, ag.Elite);
         }
 
         private void PlayerRemovedEvent(CommonFields.Player player)
@@ -280,23 +320,14 @@ namespace Blish_HUD_Module1
             // All static members must be manually unset
         }
 
-        private async Task<Blish_HUD.Content.AsyncTexture2D> GetSpecializationIcon(CommonFields.Player player)
+        private AsyncTexture2D GetSpecializationIcon(uint professionCode, uint specializationCode)
         {
-            var connection = new Gw2Sharp.Connection();
-            using var client = new Gw2Sharp.Gw2Client(connection);
-            var webApiClient = client.WebApi.V2;
-            var specializationClient = webApiClient.Specializations;
-            var professionsClient = webApiClient.Professions;
-            if (player.Elite == 0)
+            if (specializationCode == 0)
             {
-                int playerProfession = (int) player.Profession;
-                var allProffesions = await professionsClient.AllAsync();
-                var proffessionId = allProffesions[playerProfession - 1].Id;
-                var profession = await professionsClient.GetAsync(proffessionId);
-                return GameService.Content.GetRenderServiceTexture(profession.IconBig);
+                return _professionIcons[professionCode];
             }
-            var eliteSpec = await specializationClient.GetAsync((int)player.Elite);
-            return GameService.Content.GetRenderServiceTexture(eliteSpec.ProfessionIconBig);
+
+            return _specializationIcons[specializationCode];
         }
 
 
@@ -374,6 +405,45 @@ namespace Blish_HUD_Module1
 
             };
         }
+
+        private static readonly IReadOnlyCollection<int> EliteSpecializationCodes = new []
+        {
+            18, // Berserker
+            61, // Spellbreaker
+            //68, // Bladesworn
+
+            27, // Dragonhunter
+            62, // Firebrand
+            //65, // Willbender
+
+            52, // Herald
+            63, // Renegade
+            //69, // Vindicator
+
+            5, // Druid
+            55, // Soulbeast
+            //72, // Untamed
+
+            7, // Daredevil
+            58, // Deadeye
+            //71, // Specter
+
+            43, // Scrapper
+            57, // Holosmith
+            //70, // Mechanist
+
+            34, // Reaper
+            60, // Scourge
+            //64, // Harbinger
+
+            48, // Tempest
+            56, // Weaver
+            //67, // Catalyst
+
+            40, // Chronomancer
+            59, // Mirage
+            //66, // Virtuoso
+        };
     }
 
 }

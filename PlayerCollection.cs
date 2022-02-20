@@ -1,9 +1,13 @@
 ﻿using Blish_HUD.ArcDps.Common;
+using Blish_HUD.Content;
 using Blish_HUD.Controls;
 using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,7 +15,8 @@ namespace Torlando.SquadTracker
 {
     public class PlayerCollection
     {
-        private ObservableCollection<Player> _players;
+        private ObservableCollection<PlayerDisplay> _playerDisplays;
+        private IDictionary<string, Player> _players;
         private ConcurrentDictionary<string, CommonFields.Player> _arcPlayersInSquad;
 
         private Panel _activePlayerPanel;
@@ -19,26 +24,40 @@ namespace Torlando.SquadTracker
 
         public PlayerCollection(ConcurrentDictionary<string, CommonFields.Player> arcPlayersInSquad, Panel activePlayerPanel, Panel formerPlayerPanel)
         {
-            _players = new ObservableCollection<Player>();
+            _playerDisplays = new ObservableCollection<PlayerDisplay>();
+            _players = new ConcurrentDictionary<string, Player>();
             _arcPlayersInSquad = arcPlayersInSquad;
             _activePlayerPanel = activePlayerPanel;
             _formerPlayerPanel = formerPlayerPanel;
         }
 
-        public async Task AddPlayer(CommonFields.Player arcPlayer, Task<Blish_HUD.Content.AsyncTexture2D> icon, ObservableCollection<string> availableRoles)
+        public void AddPlayer(CommonFields.Player arcPlayer, Func<uint, uint, AsyncTexture2D> iconGetter, ObservableCollection<string> availableRoles)
         {
-            if (_players.Any(x => x.CharacterName.Equals(arcPlayer.CharacterName)))
+            if (_players.ContainsKey(arcPlayer.CharacterName))
             {
                 // Move from former players if player rejoined
-                var player = GetPlayer(arcPlayer);
-                if (player?.IsFormerSquadMember ?? false)
+                var playerDisplay = GetPlayer(arcPlayer);
+                if (playerDisplay?.IsFormerSquadMember ?? false)
                 {
-                    player.MoveFormerSquadMemberToActivePanel();
+                    playerDisplay.MoveFormerSquadMemberToActivePanel();
                 }
                 //Don't add duplicate player
                 return;
             }
-            _players.Add(new Player(_activePlayerPanel, _formerPlayerPanel, arcPlayer, await icon, availableRoles));
+
+            var player = new Player(arcPlayer.AccountName, isSelf: arcPlayer.Self, characterName: arcPlayer.CharacterName, profession: arcPlayer.Profession, currentSpecialization: arcPlayer.Elite);
+
+            _players.Add(player.CharacterName, player);
+            _playerDisplays.Add(new PlayerDisplay(_activePlayerPanel, _formerPlayerPanel, player, iconGetter, availableRoles));
+        }
+
+        public void UpdatePlayerSpecialization(string characterName, uint newSpec)
+        {
+            var hasPlayer = _players.TryGetValue(characterName, out var player);
+            if (!hasPlayer) return;
+            if (player.CurrentSpecialization == newSpec) return;
+
+            player.CurrentSpecialization = newSpec;
         }
 
         public void RemovePlayerFromActivePanel(CommonFields.Player arcPlayer)
@@ -50,7 +69,7 @@ namespace Torlando.SquadTracker
 
         public void ClearFormerPlayers()
         {
-            foreach (var player in _players)
+            foreach (var player in _playerDisplays)
             {
                 if (player.IsFormerSquadMember)
                     player.DisposeDetailsButton(); //todo - test this
@@ -62,16 +81,16 @@ namespace Torlando.SquadTracker
             return _arcPlayersInSquad.First(x => x.Value.CharacterName.Equals(characterName)).Value;
         }
 
-        private Player GetPlayer(CommonFields.Player arcPlayer)
+        private PlayerDisplay GetPlayer(CommonFields.Player arcPlayer)
         {
-            return _players.First(x => x.CharacterName.Equals(arcPlayer.CharacterName));
+            return _playerDisplays.First(x => x.CharacterName.Equals(arcPlayer.CharacterName));
         }
     }
 
-    public class Player
+    public class PlayerDisplay
     {
         #region Data
-        private CommonFields.Player _arcPlayer;
+        private Player _player;
         private ObservableCollection<string> _availableRoles;
         #endregion
 
@@ -81,23 +100,25 @@ namespace Torlando.SquadTracker
         private Dropdown _dropdown2;
         private Panel _activePlayerPanel;
         private Panel _formerPlayerPanel;
-        private Blish_HUD.Content.AsyncTexture2D _icon;
+        private Func<uint, uint, AsyncTexture2D> _iconGetter;
         private const string _placeholderRoleName = "Select a role...";
         #endregion
 
-        public string CharacterName => _arcPlayer.CharacterName;
+        public string CharacterName => _player.CharacterName;
         public bool IsFormerSquadMember => _detailsButton.Parent?.Equals(_formerPlayerPanel) ?? false;
-        public bool IsSelf => _arcPlayer.Self;
-        public Player(Panel activePlayerPanel, 
-            Panel formerPlayerPanel, CommonFields.Player arcPlayer, Blish_HUD.Content.AsyncTexture2D icon, ObservableCollection<string> availableRoles)
+        public bool IsSelf => _player.IsSelf;
+        public PlayerDisplay(Panel activePlayerPanel,
+            Panel formerPlayerPanel, Player player, Func<uint, uint, AsyncTexture2D> iconGetter, ObservableCollection<string> availableRoles)
         {
             _activePlayerPanel = activePlayerPanel;
             _formerPlayerPanel = formerPlayerPanel;
-            _arcPlayer = arcPlayer;
-            _icon = icon;
+            _player = player;
+            _iconGetter = iconGetter;
             _availableRoles = availableRoles;
             CreateDetailsButton();
             _availableRoles.CollectionChanged += UpdateDropdowns;
+
+            player.PropertyChanged += UpdateDetailsButton;
         }
 
         public void RemovePlayerFromActivePanel()
@@ -118,6 +139,7 @@ namespace Torlando.SquadTracker
         public void DisposeDetailsButton()
         {
             _detailsButton.Dispose();
+            _player.PropertyChanged -= UpdateDetailsButton;
         }
 
         private void CreateDetailsButton()
@@ -125,16 +147,22 @@ namespace Torlando.SquadTracker
             _detailsButton = new DetailsButton
             {
                 Parent = _activePlayerPanel,
-                Text = $"{_arcPlayer.CharacterName} ({_arcPlayer.AccountName})",
+                Text = $"{_player.CharacterName} ({_player.AccountName})",
                 IconSize = DetailsIconSize.Small,
                 ShowVignette = true,
                 HighlightType = DetailsHighlightType.LightHighlight,
                 ShowToggleButton = true,
-                Icon = _icon,
+                Icon = _iconGetter(_player.Profession, _player.CurrentSpecialization),
                 Size = new Point(354, 90)
             };
             _dropdown1 = CreateDropdown();
             _dropdown2 = CreateDropdown();
+        }
+
+        private void UpdateDetailsButton(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName != nameof(Player.CurrentSpecialization)) return;
+            _detailsButton.Icon = _iconGetter(_player.Profession, _player.CurrentSpecialization);
         }
 
         private Dropdown CreateDropdown()
