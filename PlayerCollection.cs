@@ -162,6 +162,7 @@ namespace Torlando.SquadTracker
         private void UpdateDetailsButton(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName != nameof(Player.CurrentSpecialization)) return;
+            if (IsFormerSquadMember) return;
             if (_player.Profession == 0) return;
             _detailsButton.Icon = _iconGetter(_player.Profession, _player.CurrentSpecialization);
         }
