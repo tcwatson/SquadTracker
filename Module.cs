@@ -15,9 +15,8 @@ using System.Collections.Specialized;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Threading.Tasks;
-using Torlando.SquadTracker;
 
-namespace Blish_HUD_Module1
+namespace Torlando.SquadTracker
 {
     [Export(typeof(Blish_HUD.Modules.Module))]
     public class Module : Blish_HUD.Modules.Module
