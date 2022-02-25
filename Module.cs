@@ -218,7 +218,11 @@ namespace Torlando.SquadTracker
             };
 
             _squadMembersPanel.BasicTooltipText = "You loaded Blish HUD after starting Guild Wars 2. Please change maps to refresh.";
-            //SetupPlaceholderPlayers();
+            SetupPlaceholderPlayers();
+            SetupPlaceholderPlayers();
+            SetupPlaceholderPlayers();
+            SetupPlaceholderPlayers();
+            SetupPlaceholderPlayers();
 
             return panel;
         }
@@ -252,7 +256,7 @@ namespace Torlando.SquadTracker
                 Parent = basePanel,
                 Location = new Point(_menu.Right + 10, _menu.Top),
                 CanScroll = true,
-                Size = new Point(basePanel.Width - _menu.Width - 5, 400),
+                Size = new Point(basePanel.Width - _menu.Width - 5, 530), //
                 Title = "Current Squad Members",
                 ShowBorder = true
             };
@@ -263,7 +267,7 @@ namespace Torlando.SquadTracker
                 Parent = basePanel,
                 Location = new Point(_menu.Right + 10, _squadMembersPanel.Bottom + 10),
                 CanScroll = true,
-                Size = new Point(basePanel.Width - _menu.Width - 5, 300),
+                Size = new Point(basePanel.Width - _menu.Width - 5, 150),
                 Title = "Former Squad Members",
                 ShowBorder = true
             };
