@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Text;
 
 namespace Torlando.SquadTracker
 {
@@ -249,17 +250,12 @@ namespace Torlando.SquadTracker
 
         private string GetPreviousCharactersToolTipText()
         {
-            var tooltip = "Previously played...\r\n";
-            var last = _player.PreviouslyPlayedCharacters.Last();
+            var tooltip = new StringBuilder("Previously played...").AppendLine();
             foreach (var character in _player.PreviouslyPlayedCharacters)
             {
-                tooltip += $"{Specialization.GetEliteName(character.CurrentSpecialization, character.Profession)} ({character.CharacterName})";
-                if (character.CharacterName != last.CharacterName)
-                {
-                    tooltip += "\r\n";
-                }
+                tooltip.AppendLine($"{Specialization.GetEliteName(character.CurrentSpecialization, character.Profession)} ({character.CharacterName})");
             }
-            return tooltip;
+            return tooltip.ToString().Trim();
         }
     }
 }
