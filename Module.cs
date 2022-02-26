@@ -24,7 +24,7 @@ namespace Torlando.SquadTracker
 
         private static readonly Logger Logger = Logger.GetLogger<Module>();
 
-        private ObservableCollection<string> _customRoles = new ObservableCollection<string>();
+        private ObservableCollection<Role> _customRoles = new ObservableCollection<Role>();
 
         #region Service Managers
         internal SettingsManager SettingsManager => this.ModuleParameters.SettingsManager;
@@ -281,7 +281,7 @@ namespace Torlando.SquadTracker
 
         private void AddRole(Role role)
         {
-            _customRoles.Add(role.Name);
+            _customRoles.Add(role);
             var newRoleButton = new DetailsButton
             {
                 Parent = _squadRolesFlowPanel,
@@ -300,7 +300,7 @@ namespace Torlando.SquadTracker
             };
             removeButton.Click += delegate
             {
-                _customRoles.Remove(role.Name);
+                _customRoles.Remove(role);
                 _squadRolesFlowPanel.RemoveChild(newRoleButton);
             };
         }
