@@ -32,7 +32,6 @@ namespace Torlando.SquadTracker
 
         public void AddPlayer(CommonFields.Player arcPlayer, Func<uint, uint, AsyncTexture2D> iconGetter, ObservableCollection<string> availableRoles)
         {
-            Player previousCharacter = null;
             if (_players.TryGetValue(arcPlayer.AccountName, out var existingPlayer))
             {
                 var playerDisplay = GetPlayer(arcPlayer);
@@ -54,15 +53,7 @@ namespace Torlando.SquadTracker
             }
 
             var player = new Player(arcPlayer);
-            if (previousCharacter != null)
-            {
-                player.PreviouslyPlayedCharacters.Add(previousCharacter);
-            }
-            else
-            {
-                _players.Add(player.AccountName, player);
-            }
-
+            _players.Add(player.AccountName, player);
             _playerDisplays.Add(new PlayerDisplay(_activePlayerPanel, _formerPlayerPanel, player, iconGetter, availableRoles));
         }
 
