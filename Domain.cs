@@ -32,24 +32,6 @@ namespace Torlando.SquadTracker
         public uint Profession { get; private set; }
         public bool HasChangedCharacters => PreviouslyPlayedCharacters?.Count > 0;
         public HashSet<Player> PreviouslyPlayedCharacters { get; set; }
-        public bool TryGetPlayedCharacterByName(string characterName, out Player player)
-        {
-            if (CharacterName.Equals(characterName))
-            {
-                player = this;
-                return true;
-            }
-            foreach (var character in PreviouslyPlayedCharacters)
-            {
-                if (characterName.Equals(character.CharacterName))
-                {
-                    player = character;
-                    return true;
-                }
-            }
-            player = null;
-            return false;
-        }
 
         public uint CurrentSpecialization
         {
