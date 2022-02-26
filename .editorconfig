@@ -1,3 +1,7 @@
 [*]
 end_of_line = lf
 insert_final_newline = true
+
+; No need for final newline for files with a root element.
+[*.{cs,json,xml,csproj,config}]
+insert_final_newline = false
