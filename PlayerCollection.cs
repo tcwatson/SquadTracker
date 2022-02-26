@@ -65,7 +65,7 @@ namespace Torlando.SquadTracker
             );
             var player = allPlayers.FirstOrDefault(player => player.CharacterName == characterName);
             if (player == null) return;
-            if (player?.CurrentSpecialization == newSpec) return;
+            if (player.CurrentSpecialization == newSpec) return;
 
             player.CurrentSpecialization = newSpec;
         }
