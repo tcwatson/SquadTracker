@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel.Composition;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -21,10 +22,11 @@ namespace Torlando.SquadTracker
     [Export(typeof(Blish_HUD.Modules.Module))]
     public class Module : Blish_HUD.Modules.Module
     {
+        private const string MODULE_FOLDER_NAME = "squadtracker";
 
         private static readonly Logger Logger = Logger.GetLogger<Module>();
 
-        private ObservableCollection<Role> _customRoles = new ObservableCollection<Role>();
+        private ObservableCollection<Role> _customRoles;
 
         #region Service Managers
         internal SettingsManager SettingsManager => this.ModuleParameters.SettingsManager;
@@ -85,7 +87,8 @@ namespace Torlando.SquadTracker
         /// </summary>
         protected override async Task LoadAsync()
         {
-             await LoadSpecializationIconsAsync();
+            await LoadSpecializationIconsAsync();
+            await LoadRoles();
         }
 
         private async Task LoadSpecializationIconsAsync()
@@ -111,6 +114,31 @@ namespace Torlando.SquadTracker
             );
         }
 
+        private async Task LoadRoles()
+        {
+            // Throws if the squadtracker folder does not exists, but Blish
+            // HUD creates it from the manifest so it's probably okay!
+            var directoryName = DirectoriesManager.RegisteredDirectories.First(directoryName => directoryName == MODULE_FOLDER_NAME);
+            var directoryPath = DirectoriesManager.GetFullDirectoryPath(directoryName);
+
+            _customRoles = await RolesPersister.LoadRolesFromFileSystem(directoryPath);
+
+            foreach (var role in _customRoles)
+            {
+                if (!string.IsNullOrEmpty(role.IconPath))
+                {
+                    try
+                    {
+                        role.Icon = ContentsManager.GetTexture(role.IconPath);
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Warn($"Could not load texture {role.IconPath}: {e.Message}");
+                    }
+                }
+            }
+        }
+
         /// <summary>
         /// Allows you to perform an action once your module has finished loading (once
         /// <see cref="LoadAsync"/> has completed).  You must call "base.OnModuleLoaded(e)" at the
@@ -125,15 +153,6 @@ namespace Torlando.SquadTracker
             GameService.ArcDps.Common.PlayerRemoved += PlayerRemovedEvent;
             GameService.ArcDps.RawCombatEvent += RawCombatEvent;
             _playerCollection = new PlayerCollection(_arcPlayers, _squadMembersPanel, _formerSquadMembersPanel);
-            var predefinedRoles = new List<Role>
-            {
-                new Role ("Quickness", ContentsManager.GetTexture(@"icons\quickness.png")),
-                new Role ("Alacrity", ContentsManager.GetTexture(@"icons\alacrity.png")),
-                new Role ("Heal", ContentsManager.GetTexture(@"icons\regeneration.png")),
-                new Role ("Power DPS", ContentsManager.GetTexture(@"icons\power.png")),
-                new Role ("Condi DPS", ContentsManager.GetTexture(@"icons\Condition_Damage.png"))
-            };
-            predefinedRoles.ForEach(x => AddRole(x));
 
             // Base handler must be called
             base.OnModuleLoaded(e);
@@ -198,9 +217,17 @@ namespace Torlando.SquadTracker
                 ShowBorder = true,
                 ControlPadding = new Vector2(8, 8)
             };
+
+            foreach (var role in _customRoles)
+            {
+                CreateRoleButton(role);
+            }
+
             addButton.Click += delegate
             {
-                AddRole(new Role(newRole.Text));
+                var role = new Role(newRole.Text);
+                _customRoles.Add(role);
+                CreateRoleButton(role);
                 newRole.Text = string.Empty;
             };
 
@@ -279,9 +306,8 @@ namespace Torlando.SquadTracker
             };
         }
 
-        private void AddRole(Role role)
+        private void CreateRoleButton(Role role)
         {
-            _customRoles.Add(role);
             var newRoleButton = new DetailsButton
             {
                 Parent = _squadRolesFlowPanel,

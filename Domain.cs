@@ -1,5 +1,6 @@
 using Blish_HUD.ArcDps.Common;
 using Microsoft.Xna.Framework.Graphics;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -61,14 +62,11 @@ namespace Torlando.SquadTracker
 
     public class Role
     {
-        public string Name { get; set; }
-        public Texture2D Icon { get; set; }
+        public string Name { get; private set; }
 
-        public Role(string name, Texture2D icon)
-        {
-            Name = name;
-            Icon = icon;
-        }
+        [JsonIgnore]
+        public Texture2D Icon { get; set; }
+        public string IconPath { get; set; } = string.Empty;
 
         public Role(string name)
         {
