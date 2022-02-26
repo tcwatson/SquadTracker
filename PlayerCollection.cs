@@ -60,8 +60,11 @@ namespace Torlando.SquadTracker
 
         public void UpdatePlayerSpecialization(string characterName, uint newSpec)
         {
-            var hasPlayer = _players.TryGetValue(characterName, out var player);
-            if (!hasPlayer) return;
+            var allPlayers = _players.Values.Concat(
+                _players.ToList().SelectMany(player => player.Value.PreviouslyPlayedCharacters)
+            );
+            var player = allPlayers.FirstOrDefault(player => player.CharacterName == characterName);
+            if (player == null) return;
             if (player.CurrentSpecialization == newSpec) return;
 
             player.CurrentSpecialization = newSpec;
