@@ -218,11 +218,7 @@ namespace Torlando.SquadTracker
             };
 
             _squadMembersPanel.BasicTooltipText = "You loaded Blish HUD after starting Guild Wars 2. Please change maps to refresh.";
-            SetupPlaceholderPlayers();
-            SetupPlaceholderPlayers();
-            SetupPlaceholderPlayers();
-            SetupPlaceholderPlayers();
-            SetupPlaceholderPlayers();
+            //SetupPlaceholderPlayers();
 
             return panel;
         }

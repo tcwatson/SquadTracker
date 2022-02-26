@@ -9,7 +9,6 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Torlando.SquadTracker
 {
@@ -33,21 +32,37 @@ namespace Torlando.SquadTracker
 
         public void AddPlayer(CommonFields.Player arcPlayer, Func<uint, uint, AsyncTexture2D> iconGetter, ObservableCollection<string> availableRoles)
         {
-            if (_players.ContainsKey(arcPlayer.CharacterName))
+            Player previousCharacter = null;
+            if (_players.TryGetValue(arcPlayer.AccountName, out var existingPlayer))
             {
-                // Move from former players if player rejoined
                 var playerDisplay = GetPlayer(arcPlayer);
+
+                // Move from former players if player rejoined
                 if (playerDisplay?.IsFormerSquadMember ?? false)
                 {
                     playerDisplay.MoveFormerSquadMemberToActivePanel();
                 }
+                if (arcPlayer.CharacterName != existingPlayer.CharacterName)
+                {
+                    var newCharacter = new Player(arcPlayer, existingPlayer);
+                    playerDisplay.UpateCharacter(newCharacter);
+                    _players[arcPlayer.AccountName] = newCharacter;
+                }
                 //Don't add duplicate player
                 return;
+
             }
 
-            var player = new Player(arcPlayer.AccountName, isSelf: arcPlayer.Self, characterName: arcPlayer.CharacterName, profession: arcPlayer.Profession, currentSpecialization: arcPlayer.Elite);
+            var player = new Player(arcPlayer);
+            if (previousCharacter != null)
+            {
+                player.PreviouslyPlayedCharacters.Add(previousCharacter);
+            }
+            else
+            {
+                _players.Add(player.AccountName, player);
+            }
 
-            _players.Add(player.CharacterName, player);
             _playerDisplays.Add(new PlayerDisplay(_activePlayerPanel, _formerPlayerPanel, player, iconGetter, availableRoles));
         }
 
@@ -83,7 +98,7 @@ namespace Torlando.SquadTracker
 
         private PlayerDisplay GetPlayer(CommonFields.Player arcPlayer)
         {
-            return _playerDisplays.First(x => x.CharacterName.Equals(arcPlayer.CharacterName));
+            return _playerDisplays.First(x => x.AccountName.Equals(arcPlayer.AccountName));
         }
     }
 
@@ -106,7 +121,9 @@ namespace Torlando.SquadTracker
 
         public string CharacterName => _player.CharacterName;
         public bool IsFormerSquadMember => _detailsButton.Parent?.Equals(_formerPlayerPanel) ?? false;
+        public bool HasChangedCharacters => _player.HasChangedCharacters;
         public bool IsSelf => _player.IsSelf;
+        public string AccountName => _player.AccountName;
         public PlayerDisplay(Panel activePlayerPanel,
             Panel formerPlayerPanel, Player player, Func<uint, uint, AsyncTexture2D> iconGetter, ObservableCollection<string> availableRoles)
         {
@@ -115,9 +132,10 @@ namespace Torlando.SquadTracker
             _player = player;
             _iconGetter = iconGetter;
             _availableRoles = availableRoles;
-            CreateDetailsButton();
-            _availableRoles.CollectionChanged += UpdateDropdowns;
+            
+            CreateDetailsButtonAndDropDowns();
 
+            _availableRoles.CollectionChanged += UpdateDropdowns;
             player.PropertyChanged += UpdateDetailsButton;
         }
 
@@ -142,7 +160,22 @@ namespace Torlando.SquadTracker
             _player.PropertyChanged -= UpdateDetailsButton;
         }
 
-        private void CreateDetailsButton()
+        /// <summary>
+        /// Updates the text on the DetailsButton for the PlayerDisplay when a player changes characters
+        /// </summary>
+        public void UpateCharacter(Player player)
+        {
+            _player = player;
+            UpdateDetailsButtonWithNewCharacter();
+        }
+
+        private void CreateDetailsButtonAndDropDowns()
+        {
+            CreateDetailsButtonOnly();
+            _dropdown1 = CreateDropdown();
+            _dropdown2 = CreateDropdown();
+        }
+        private void CreateDetailsButtonOnly()
         {
             _detailsButton = new DetailsButton
             {
@@ -155,8 +188,6 @@ namespace Torlando.SquadTracker
                 Icon = _iconGetter(_player.Profession, _player.CurrentSpecialization),
                 Size = new Point(354, 90)
             };
-            _dropdown1 = CreateDropdown();
-            _dropdown2 = CreateDropdown();
         }
 
         private void UpdateDetailsButton(object sender, PropertyChangedEventArgs e)
@@ -165,6 +196,13 @@ namespace Torlando.SquadTracker
             if (IsFormerSquadMember) return;
             if (_player.Profession == 0) return;
             _detailsButton.Icon = _iconGetter(_player.Profession, _player.CurrentSpecialization);
+        }
+
+        private void UpdateDetailsButtonWithNewCharacter()
+        {
+            _detailsButton.Text = $"{_player.CharacterName} ({_player.AccountName})";
+            _detailsButton.Icon = _iconGetter(_player.Profession, _player.CurrentSpecialization);
+            _detailsButton.BasicTooltipText = GetPreviousCharactersToolTipText();
         }
 
         private Dropdown CreateDropdown()
@@ -218,5 +256,19 @@ namespace Torlando.SquadTracker
             return dropdown;
         }
 
+        private string GetPreviousCharactersToolTipText()
+        {
+            var tooltip = "Previously played...\r\n";
+            var last = _player.PreviouslyPlayedCharacters.Last();
+            foreach (var character in _player.PreviouslyPlayedCharacters)
+            {
+                tooltip += $"{Specialization.GetEliteName(character.CurrentSpecialization, character.Profession)} ({character.CharacterName})";
+                if (character.CharacterName != last.CharacterName)
+                {
+                    tooltip += "\r\n";
+                }
+            }
+            return tooltip;
+        }
     }
 }

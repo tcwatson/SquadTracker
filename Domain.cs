@@ -1,3 +1,5 @@
+using Blish_HUD.ArcDps.Common;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -5,20 +7,31 @@ namespace Torlando.SquadTracker
 {
     public class Player : INotifyPropertyChanged
     {
-        public Player(string accountName, bool isSelf, string characterName, uint profession, uint currentSpecialization)
+        public Player(CommonFields.Player arcPlayer, Player previousCharacter = null) 
         {
-            AccountName = accountName;
-            IsSelf = isSelf;
-            CharacterName = characterName;
-            Profession = profession;
+            AccountName = arcPlayer.AccountName;
+            IsSelf = arcPlayer.Self;
+            CharacterName = arcPlayer.CharacterName;
+            Profession = arcPlayer.Profession;
 
-            _currentSpecialization = currentSpecialization;
+            _currentSpecialization = arcPlayer.Elite;
+            if (previousCharacter != null)
+            {
+                PreviouslyPlayedCharacters = previousCharacter.PreviouslyPlayedCharacters;
+                PreviouslyPlayedCharacters.Add(previousCharacter);
+            }
+            else
+            {
+                PreviouslyPlayedCharacters = new HashSet<Player>();
+            }
         }
 
         public string AccountName { get; private set; }
         public bool IsSelf { get; private set; }
         public string CharacterName { get; private set; }
         public uint Profession { get; private set; }
+        public bool HasChangedCharacters => PreviouslyPlayedCharacters?.Count > 0;
+        public HashSet<Player> PreviouslyPlayedCharacters { get; set; }
 
         public uint CurrentSpecialization
         {
