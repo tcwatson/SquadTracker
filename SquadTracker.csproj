@@ -132,7 +132,6 @@
     <Compile Include="Domain.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="PlayerCollection.cs" />
-    <Compile Include="Role.cs" />
     <Compile Include="Specialization.cs" />
   </ItemGroup>
   <ItemGroup>
