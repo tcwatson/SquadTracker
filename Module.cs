@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel.Composition;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -21,10 +22,11 @@ namespace Torlando.SquadTracker
     [Export(typeof(Blish_HUD.Modules.Module))]
     public class Module : Blish_HUD.Modules.Module
     {
+        private const string MODULE_FOLDER_NAME = "squadtracker";
 
         private static readonly Logger Logger = Logger.GetLogger<Module>();
 
-        private ObservableCollection<string> _customRoles = new ObservableCollection<string>();
+        private ObservableCollection<Role> _customRoles;
 
         #region Service Managers
         internal SettingsManager SettingsManager => this.ModuleParameters.SettingsManager;
@@ -85,7 +87,8 @@ namespace Torlando.SquadTracker
         /// </summary>
         protected override async Task LoadAsync()
         {
-             await LoadSpecializationIconsAsync();
+            await LoadSpecializationIconsAsync();
+            await LoadRoles();
         }
 
         private async Task LoadSpecializationIconsAsync()
@@ -103,12 +106,37 @@ namespace Torlando.SquadTracker
             );
 
             var specializationClient = webApiClient.Specializations;
-            var eliteSpecs = await specializationClient.ManyAsync(EliteSpecializationCodes);
+            var eliteSpecs = await specializationClient.ManyAsync(Specialization.EliteCodes);
 
             _specializationIcons = eliteSpecs.ToDictionary(
                 keySelector: (spec) => (uint)spec.Id,
                 (spec) => GameService.Content.GetRenderServiceTexture(spec.ProfessionIconBig)
             );
+        }
+
+        private async Task LoadRoles()
+        {
+            // Throws if the squadtracker folder does not exists, but Blish
+            // HUD creates it from the manifest so it's probably okay!
+            var directoryName = DirectoriesManager.RegisteredDirectories.First(directoryName => directoryName == MODULE_FOLDER_NAME);
+            var directoryPath = DirectoriesManager.GetFullDirectoryPath(directoryName);
+
+            _customRoles = await RolesPersister.LoadRolesFromFileSystem(directoryPath);
+
+            foreach (var role in _customRoles)
+            {
+                if (!string.IsNullOrEmpty(role.IconPath))
+                {
+                    try
+                    {
+                        role.Icon = ContentsManager.GetTexture(role.IconPath);
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Warn($"Could not load texture {role.IconPath}: {e.Message}");
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -125,15 +153,6 @@ namespace Torlando.SquadTracker
             GameService.ArcDps.Common.PlayerRemoved += PlayerRemovedEvent;
             GameService.ArcDps.RawCombatEvent += RawCombatEvent;
             _playerCollection = new PlayerCollection(_arcPlayers, _squadMembersPanel, _formerSquadMembersPanel);
-            var predefinedRoles = new List<Role>
-            {
-                new Role ("Quickness", ContentsManager.GetTexture(@"icons\quickness.png")),
-                new Role ("Alacrity", ContentsManager.GetTexture(@"icons\alacrity.png")),
-                new Role ("Heal", ContentsManager.GetTexture(@"icons\regeneration.png")),
-                new Role ("Power DPS", ContentsManager.GetTexture(@"icons\power.png")),
-                new Role ("Condi DPS", ContentsManager.GetTexture(@"icons\Condition_Damage.png"))
-            };
-            predefinedRoles.ForEach(x => AddRole(x));
 
             // Base handler must be called
             base.OnModuleLoaded(e);
@@ -198,9 +217,17 @@ namespace Torlando.SquadTracker
                 ShowBorder = true,
                 ControlPadding = new Vector2(8, 8)
             };
+
+            foreach (var role in _customRoles)
+            {
+                CreateRoleButton(role);
+            }
+
             addButton.Click += delegate
             {
-                AddRole(new Role(newRole.Text));
+                var role = new Role(newRole.Text);
+                _customRoles.Add(role);
+                CreateRoleButton(role);
                 newRole.Text = string.Empty;
             };
 
@@ -279,9 +306,8 @@ namespace Torlando.SquadTracker
             };
         }
 
-        private void AddRole(Role role)
+        private void CreateRoleButton(Role role)
         {
-            _customRoles.Add(role.Name);
             var newRoleButton = new DetailsButton
             {
                 Parent = _squadRolesFlowPanel,
@@ -300,7 +326,7 @@ namespace Torlando.SquadTracker
             };
             removeButton.Click += delegate
             {
-                _customRoles.Remove(role.Name);
+                _customRoles.Remove(role);
                 _squadRolesFlowPanel.RemoveChild(newRoleButton);
             };
         }
@@ -404,45 +430,6 @@ namespace Torlando.SquadTracker
 
             };
         }
-
-        private static readonly IReadOnlyCollection<int> EliteSpecializationCodes = new []
-        {
-            18, // Berserker
-            61, // Spellbreaker
-            //68, // Bladesworn
-
-            27, // Dragonhunter
-            62, // Firebrand
-            //65, // Willbender
-
-            52, // Herald
-            63, // Renegade
-            //69, // Vindicator
-
-            5, // Druid
-            55, // Soulbeast
-            //72, // Untamed
-
-            7, // Daredevil
-            58, // Deadeye
-            //71, // Specter
-
-            43, // Scrapper
-            57, // Holosmith
-            //70, // Mechanist
-
-            34, // Reaper
-            60, // Scourge
-            //64, // Harbinger
-
-            48, // Tempest
-            56, // Weaver
-            //67, // Catalyst
-
-            40, // Chronomancer
-            59, // Mirage
-            //66, // Virtuoso
-        };
     }
 
 }

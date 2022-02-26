@@ -31,7 +31,7 @@ namespace Torlando.SquadTracker
             _formerPlayerPanel = formerPlayerPanel;
         }
 
-        public void AddPlayer(CommonFields.Player arcPlayer, Func<uint, uint, AsyncTexture2D> iconGetter, ObservableCollection<string> availableRoles)
+        public void AddPlayer(CommonFields.Player arcPlayer, Func<uint, uint, AsyncTexture2D> iconGetter, ObservableCollection<Role> availableRoles)
         {
             if (_players.TryGetValue(arcPlayer.AccountName, out var existingPlayer))
             {
@@ -101,7 +101,7 @@ namespace Torlando.SquadTracker
     {
         #region Data
         private Player _player;
-        private ObservableCollection<string> _availableRoles;
+        private ObservableCollection<Role> _availableRoles;
         #endregion
 
         #region UI
@@ -120,7 +120,7 @@ namespace Torlando.SquadTracker
         public bool IsSelf => _player.IsSelf;
         public string AccountName => _player.AccountName;
         public PlayerDisplay(Panel activePlayerPanel,
-            Panel formerPlayerPanel, Player player, Func<uint, uint, AsyncTexture2D> iconGetter, ObservableCollection<string> availableRoles)
+            Panel formerPlayerPanel, Player player, Func<uint, uint, AsyncTexture2D> iconGetter, ObservableCollection<Role> availableRoles)
         {
             _activePlayerPanel = activePlayerPanel;
             _formerPlayerPanel = formerPlayerPanel;
@@ -210,27 +210,28 @@ namespace Torlando.SquadTracker
             dropdown.Items.Add(_placeholderRoleName);
             foreach (var role in _availableRoles)
             {
-                dropdown.Items.Add(role);
+                dropdown.Items.Add(role.Name);
             }
             return dropdown;
         }
 
         private void UpdateDropdowns(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if (e.Action.ToString().Equals("Remove"))
+            // TODO: Handle the other actions (Replace, Move, Reset)
+            if (e.Action == NotifyCollectionChangedAction.Remove)
             {
-                foreach (var removedItem in e.OldItems)
+                foreach (var removedItem in e.OldItems.Cast<Role>())
                 {
-                    _dropdown1 = RemoveItemFromDropdown(_dropdown1, removedItem.ToString());
-                    _dropdown2 = RemoveItemFromDropdown(_dropdown2, removedItem.ToString());
+                    _dropdown1 = RemoveItemFromDropdown(_dropdown1, removedItem.Name);
+                    _dropdown2 = RemoveItemFromDropdown(_dropdown2, removedItem.Name);
                 }
             }
-            else
+            else if (e.Action == NotifyCollectionChangedAction.Add)
             {
-                foreach (var newItem in e.NewItems)
+                foreach (var newItem in e.NewItems.Cast<Role>())
                 {
-                    _dropdown1 = AddItemToDropddown(_dropdown1, newItem.ToString());
-                    _dropdown2 = AddItemToDropddown(_dropdown2, newItem.ToString());
+                    _dropdown1 = AddItemToDropddown(_dropdown1, newItem.Name);
+                    _dropdown2 = AddItemToDropddown(_dropdown2, newItem.Name);
                 }
             }
         }
