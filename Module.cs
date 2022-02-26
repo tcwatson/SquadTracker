@@ -85,7 +85,6 @@ namespace Torlando.SquadTracker
         /// </summary>
         protected override async Task LoadAsync()
         {
-            _tabPanel = BuildPanel(GameService.Overlay.BlishHudWindow.ContentRegion);
              await LoadSpecializationIconsAsync();
         }
 
@@ -119,6 +118,7 @@ namespace Torlando.SquadTracker
         /// </summary>
         protected override void OnModuleLoaded(EventArgs e)
         {
+            _tabPanel = BuildPanel(GameService.Overlay.BlishHudWindow.ContentRegion);
             _windowTab = GameService.Overlay.BlishHudWindow.AddTab("Squad Tracker", ContentsManager.GetTexture(@"textures\commandertag.png"), _tabPanel);
             GameService.ArcDps.Common.Activate();
             GameService.ArcDps.Common.PlayerAdded += PlayerAddedEvent;
