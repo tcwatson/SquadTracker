@@ -44,7 +44,7 @@ namespace Torlando.SquadTracker
                 if (arcPlayer.CharacterName != existingPlayer.CharacterName)
                 {
                     var newCharacter = new Player(arcPlayer, existingPlayer);
-                    playerDisplay.UpateCharacter(newCharacter);
+                    playerDisplay.UpdateCharacter(newCharacter);
                     _players[arcPlayer.AccountName] = newCharacter;
                 }
                 //Don't add duplicate player
@@ -154,7 +154,7 @@ namespace Torlando.SquadTracker
         /// <summary>
         /// Updates the text on the DetailsButton for the PlayerDisplay when a player changes characters
         /// </summary>
-        public void UpateCharacter(Player player)
+        public void UpdateCharacter(Player player)
         {
             _player = player;
             UpdateDetailsButtonWithNewCharacter();
