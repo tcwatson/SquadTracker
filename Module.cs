@@ -47,8 +47,7 @@ namespace Torlando.SquadTracker
         private Panel _tabPanel;
         private FlowPanel _squadMembersPanel;
         private FlowPanel _formerSquadMembersPanel;
-        private FlowPanel _squadRolesFlowPanel;
-        private Panel _squadRolePanel;
+        private RolesPanel _rolesPanel;
         private MenuItem _squadMembersMenu;
         private MenuItem _squadRolesMenu;
         private Panel _menu;
@@ -187,17 +186,17 @@ namespace Torlando.SquadTracker
             };
             SetupMenu(panel);
 
-            BuildRolesPanel(panel, marginLeft: _menu.Width + 10);
+            _rolesPanel = new RolesPanel(panel, _customRoles, marginLeft: _menu.Width + 10);
 
             _squadMembersMenu.Click += delegate { 
                 _squadMembersPanel.Visible = true;
                 _formerSquadMembersPanel.Visible = true;
-                _squadRolePanel.Visible = false;
+                _rolesPanel.MainPanel.Visible = false;
                 _clearFormerSquadButton.Visible = true;
             };
             _squadRolesMenu.Click += delegate { 
                 _squadMembersPanel.Visible = false;
-                _squadRolePanel.Visible = true;
+                _rolesPanel.MainPanel.Visible = true;
                 _formerSquadMembersPanel.Visible = false;
                 _clearFormerSquadButton.Visible = false;
             };
@@ -262,108 +261,6 @@ namespace Torlando.SquadTracker
             {
                 _playerCollection.ClearFormerPlayers();
             };
-        }
-
-        private void BuildRolesPanel(Panel basePanel, int marginLeft)
-        {
-            // Main container
-            _squadRolePanel = new Panel
-            {
-                Parent = basePanel,
-                Location = new Point(marginLeft, basePanel.Top),
-                Size = new Point(basePanel.Width - marginLeft, basePanel.Height),
-                Visible = false,
-            };
-
-            // First row, with a 5 units gap between elements
-            var newRoleTb = new TextBox
-            {
-                Parent = _squadRolePanel,
-                PlaceholderText = "Create a new role…",
-            };
-
-            var addButton = new StandardButton
-            {
-                Parent = _squadRolePanel,
-                Text = "Add",
-                Location = new Point(newRoleTb.Right + 5, _squadRolePanel.Top),
-                Size = new Point(50, newRoleTb.Height),
-            };
-
-            var errorLbl = new Label
-            {
-                Parent = _squadRolePanel,
-                TextColor = Color.OrangeRed,
-                Location = new Point(addButton.Right + 5, _squadRolePanel.Top + 3),
-                AutoSizeWidth = true,
-            };
-
-            // Second row, with a 10 units gap with the first row
-            _squadRolesFlowPanel = new FlowPanel
-            {
-                Parent = _squadRolePanel,
-                Location = new Point(newRoleTb.Left, newRoleTb.Bottom + 10),
-                Title = "Currently Defined Roles",
-                Size = new Point(_squadRolePanel.Width, _squadRolePanel.Height - newRoleTb.Height - 10),
-                CanScroll = true,
-                ShowBorder = true,
-                ControlPadding = new Vector2(8, 8)
-            };
-
-            foreach (var role in _customRoles)
-            {
-                CreateRoleButton(role);
-            }
-
-            // Events
-            newRoleTb.EnterPressed += (o, e) => AddNewRole();
-            addButton.Click += (o, e) => AddNewRole();
-
-            void AddNewRole()
-            {
-                var newRoleName = newRoleTb.Text.Trim();
-                if (_customRoles.Any(role => role.Name == newRoleName))
-                {
-                    errorLbl.Text = "A role with this name already exists.";
-                    return;
-                }
-
-                errorLbl.Text = string.Empty;
-
-                var role = new Role(newRoleName);
-                _customRoles.Add(role);
-                CreateRoleButton(role);
-                newRoleTb.Text = string.Empty;
-
-                // Keep the focus on the textbox for a better flow.
-                //newRoleTb.Focused = true; // TODO: Not working yet, need to see if it's a Blish HUD bug.
-            }
-
-            void CreateRoleButton(Role role)
-            {
-                var newRoleButton = new DetailsButton
-                {
-                    Parent = _squadRolesFlowPanel,
-                    Text = role.Name,
-                    HighlightType = DetailsHighlightType.LightHighlight,
-                    ShowVignette = true,
-                    ShowToggleButton = true,
-                    Icon = role.Icon,
-                    IconSize = DetailsIconSize.Small
-                };
-
-                var removeButton = new StandardButton
-                {
-                    Parent = newRoleButton,
-                    Text = "Remove"
-                };
-
-                removeButton.Click += (o, e) =>
-                {
-                    _customRoles.Remove(role);
-                    _squadRolesFlowPanel.RemoveChild(newRoleButton);
-                };
-            }
         }
 
         protected override void Update(GameTime gameTime)
