@@ -208,7 +208,7 @@ namespace Torlando.SquadTracker
                 Width = 150
             };
             dropdown.Items.Add(_placeholderRoleName);
-            foreach (var role in _availableRoles)
+            foreach (var role in _availableRoles.OrderBy(role => role.Name.ToLowerInvariant()))
             {
                 dropdown.Items.Add(role.Name);
             }
@@ -217,39 +217,25 @@ namespace Torlando.SquadTracker
 
         private void UpdateDropdowns(object sender, NotifyCollectionChangedEventArgs e)
         {
-            // TODO: Handle the other actions (Replace, Move, Reset)
-            if (e.Action == NotifyCollectionChangedAction.Remove)
-            {
-                foreach (var removedItem in e.OldItems.Cast<Role>())
-                {
-                    _dropdown1 = RemoveItemFromDropdown(_dropdown1, removedItem.Name);
-                    _dropdown2 = RemoveItemFromDropdown(_dropdown2, removedItem.Name);
-                }
-            }
-            else if (e.Action == NotifyCollectionChangedAction.Add)
-            {
-                foreach (var newItem in e.NewItems.Cast<Role>())
-                {
-                    _dropdown1 = AddItemToDropddown(_dropdown1, newItem.Name);
-                    _dropdown2 = AddItemToDropddown(_dropdown2, newItem.Name);
-                }
-            }
+            UpdateDropdown(_dropdown1);
+            UpdateDropdown(_dropdown2);
         }
 
-        private Dropdown RemoveItemFromDropdown(Dropdown dropdown, string removedItem)
+        private void UpdateDropdown(Dropdown dropdown)
         {
-            if (dropdown.SelectedItem.Equals(removedItem))
+            var selectedItem = dropdown.SelectedItem;
+            dropdown.Items.Clear();
+
+            dropdown.Items.Add(_placeholderRoleName);
+            foreach (var role in _availableRoles.OrderBy(role => role.Name.ToLowerInvariant()))
+            {
+                dropdown.Items.Add(role.Name);
+            }
+
+            if (dropdown.Items.Contains(selectedItem) == false)
             {
                 dropdown.SelectedItem = _placeholderRoleName;
             }
-            dropdown.Items.Remove(removedItem);
-            return dropdown;
-        }
-
-        private Dropdown AddItemToDropddown(Dropdown dropdown, string newItem)
-        {
-            dropdown.Items.Add(newItem);
-            return dropdown;
         }
 
         private string GetPreviousCharactersToolTipText()
