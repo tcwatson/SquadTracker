@@ -301,7 +301,7 @@ namespace Torlando.SquadTracker
                 Parent = _squadRolePanel,
                 Location = new Point(newRoleTb.Left, newRoleTb.Bottom + 10),
                 Title = "Currently Defined Roles",
-                Size = new Point(basePanel.Width - _menu.Width - 5, basePanel.Height),
+                Size = new Point(basePanel.Width - _menu.Width - 5, basePanel.Height - newRoleTb.Height - 10),
                 CanScroll = true,
                 ShowBorder = true,
                 ControlPadding = new Vector2(8, 8)
