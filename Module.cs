@@ -312,7 +312,10 @@ namespace Torlando.SquadTracker
                 CreateRoleButton(role);
             }
 
-            addButton.Click += delegate
+            newRoleTb.EnterPressed += (o, e) => AddNewRole();
+            addButton.Click += (o, e) => AddNewRole();
+
+            void AddNewRole()
             {
                 var newRoleName = newRoleTb.Text.Trim();
                 if (_customRoles.Any(role => role.Name == newRoleName))
@@ -327,7 +330,10 @@ namespace Torlando.SquadTracker
                 _customRoles.Add(role);
                 CreateRoleButton(role);
                 newRoleTb.Text = string.Empty;
-            };
+
+                // Keep the focus on the textbox for a better flow.
+                //newRoleTb.Focused = true; // TODO: Not working yet, need to see if it's a Blish HUD bug.
+            }
         }
 
         private void CreateRoleButton(Role role)
