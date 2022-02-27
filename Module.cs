@@ -187,49 +187,7 @@ namespace Torlando.SquadTracker
             };
             SetupMenu(panel);
 
-            _squadRolePanel = new Panel
-            {
-                Parent = panel,
-                Location = new Point(_menu.Right + 10, _menu.Top),
-                Size = new Point(panel.Width, panel.Height),
-                Visible = false
-            };
-            var newRole = new TextBox
-            {
-                Parent = _squadRolePanel,
-                PlaceholderText = "new role here"
-            };
-            var addButton = new StandardButton
-            {
-                Parent = _squadRolePanel,
-                Text = "Add",
-                Location = new Point (newRole.Right + 50, _squadRolePanel.Top)
-            };
-
-
-            _squadRolesFlowPanel = new FlowPanel
-            {
-                Parent = _squadRolePanel,
-                Location = new Point(newRole.Left, newRole.Bottom + 10),
-                Title = "Currently Defined Roles",
-                Size = new Point(panel.Width - _menu.Width - 5, panel.Height),
-                CanScroll = true,
-                ShowBorder = true,
-                ControlPadding = new Vector2(8, 8)
-            };
-
-            foreach (var role in _customRoles)
-            {
-                CreateRoleButton(role);
-            }
-
-            addButton.Click += delegate
-            {
-                var role = new Role(newRole.Text);
-                _customRoles.Add(role);
-                CreateRoleButton(role);
-                newRole.Text = string.Empty;
-            };
+            BuildRolesPanel(panel);
 
             _squadMembersMenu.Click += delegate { 
                 _squadMembersPanel.Visible = true;
@@ -303,6 +261,54 @@ namespace Torlando.SquadTracker
             _clearFormerSquadButton.Click += delegate
             {
                 _playerCollection.ClearFormerPlayers();
+            };
+        }
+
+        private void BuildRolesPanel(Panel basePanel)
+        {
+            _squadRolePanel = new Panel
+            {
+                Parent = basePanel,
+                Location = new Point(_menu.Right + 10, _menu.Top),
+                Size = new Point(basePanel.Width, basePanel.Height),
+                Visible = false,
+            };
+
+            var newRoleTb = new TextBox
+            {
+                Parent = _squadRolePanel,
+                PlaceholderText = "new role here",
+            };
+
+            var addButton = new StandardButton
+            {
+                Parent = _squadRolePanel,
+                Text = "Add",
+                Location = new Point(newRoleTb.Right + 50, _squadRolePanel.Top),
+            };
+
+            _squadRolesFlowPanel = new FlowPanel
+            {
+                Parent = _squadRolePanel,
+                Location = new Point(newRoleTb.Left, newRoleTb.Bottom + 10),
+                Title = "Currently Defined Roles",
+                Size = new Point(basePanel.Width - _menu.Width - 5, basePanel.Height),
+                CanScroll = true,
+                ShowBorder = true,
+                ControlPadding = new Vector2(8, 8)
+            };
+
+            foreach (var role in _customRoles)
+            {
+                CreateRoleButton(role);
+            }
+
+            addButton.Click += delegate
+            {
+                var role = new Role(newRoleTb.Text);
+                _customRoles.Add(role);
+                CreateRoleButton(role);
+                newRoleTb.Text = string.Empty;
             };
         }
 
