@@ -288,6 +288,14 @@ namespace Torlando.SquadTracker
                 Width = 50,
             };
 
+            var errorLbl = new Label
+            {
+                Parent = _squadRolePanel,
+                TextColor = Color.OrangeRed,
+                Location = new Point(addButton.Right + 5, _squadRolePanel.Top + 3),
+                AutoSizeWidth = true,
+            };
+
             _squadRolesFlowPanel = new FlowPanel
             {
                 Parent = _squadRolePanel,
@@ -306,7 +314,16 @@ namespace Torlando.SquadTracker
 
             addButton.Click += delegate
             {
-                var role = new Role(newRoleTb.Text);
+                var newRoleName = newRoleTb.Text.Trim();
+                if (_customRoles.Any(role => role.Name == newRoleName))
+                {
+                    errorLbl.Text = "A role with this name already exists.";
+                    return;
+                }
+
+                errorLbl.Text = string.Empty;
+
+                var role = new Role(newRoleName);
                 _customRoles.Add(role);
                 CreateRoleButton(role);
                 newRoleTb.Text = string.Empty;
