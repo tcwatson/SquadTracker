@@ -277,14 +277,15 @@ namespace Torlando.SquadTracker
             var newRoleTb = new TextBox
             {
                 Parent = _squadRolePanel,
-                PlaceholderText = "new role here",
+                PlaceholderText = "Create a new role…",
             };
 
             var addButton = new StandardButton
             {
                 Parent = _squadRolePanel,
                 Text = "Add",
-                Location = new Point(newRoleTb.Right + 50, _squadRolePanel.Top),
+                Location = new Point(newRoleTb.Right + 5, _squadRolePanel.Top),
+                Width = 50,
             };
 
             _squadRolesFlowPanel = new FlowPanel
