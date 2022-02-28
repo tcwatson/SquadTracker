@@ -135,13 +135,11 @@ namespace Torlando.SquadTracker
                         else
                         {
                             if (!File.Exists(role.IconPath)) return;
-                            using (var textureStream = File.Open(role.IconPath, FileMode.Open))
+                            using var textureStream = File.Open(role.IconPath, FileMode.Open);
+                            if (textureStream != null)
                             {
-                                if (textureStream != null)
-                                {
-                                    Logger.Debug("Successfully loaded texture {dataReaderFilePath}.", role.IconPath);
-                                    role.Icon = TextureUtil.FromStreamPremultiplied(GameService.Graphics.GraphicsDevice, textureStream);
-                                }
+                                Logger.Debug("Successfully loaded texture {dataReaderFilePath}.", role.IconPath);
+                                role.Icon = TextureUtil.FromStreamPremultiplied(GameService.Graphics.GraphicsDevice, textureStream);
                             }
                         }
                     }
