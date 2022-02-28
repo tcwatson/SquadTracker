@@ -212,7 +212,7 @@ namespace Torlando.SquadTracker
             var dropdown = new Dropdown
             {
                 Parent = _detailsButton,
-                Width = 130
+                Width = 135
             };
             dropdown.Items.Add(_placeholderRoleName);
             foreach (var role in _availableRoles.OrderBy(role => role.Name.ToLowerInvariant()))
