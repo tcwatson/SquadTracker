@@ -12,8 +12,10 @@
   "url": "https://github.com/tcwatson/SquadTracker",
   "contributors": [
     {
-      "name": "Torlando"
+      "name": "Torlando",
+      "username":  "ArchAngelZero.8715"
     }
   ],
-  "directories": ["squadtracker"]
+  "directories": [ "squadtracker" ],
+  "location":  ""
 }
