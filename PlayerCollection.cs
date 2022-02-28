@@ -108,6 +108,8 @@ namespace Torlando.SquadTracker
         private DetailsButton _detailsButton;
         private Dropdown _dropdown1;
         private Dropdown _dropdown2;
+        private Image _roleIcon1 = new Image { Size = new Point(27, 27) };
+        private Image _roleIcon2 = new Image { Size = new Point(27, 27) };
         private Panel _activePlayerPanel;
         private Panel _formerPlayerPanel;
         private Func<uint, uint, AsyncTexture2D> _iconGetter;
@@ -167,9 +169,14 @@ namespace Torlando.SquadTracker
         private void CreateDetailsButtonAndDropDowns()
         {
             CreateDetailsButtonOnly();
-            _dropdown1 = CreateDropdown();
-            _dropdown2 = CreateDropdown();
+            //Order of when .Parent is set determines horizontal order on the DetailsButton
+            _dropdown1 = CreateDropdown(_roleIcon1);
+            _roleIcon1.Parent = _detailsButton;
+
+            _dropdown2 = CreateDropdown(_roleIcon2);
+            _roleIcon2.Parent = _detailsButton;            
         }
+
         private void CreateDetailsButtonOnly()
         {
             _detailsButton = new DetailsButton
@@ -200,18 +207,22 @@ namespace Torlando.SquadTracker
             _detailsButton.BasicTooltipText = GetPreviousCharactersToolTipText();
         }
 
-        private Dropdown CreateDropdown()
+        private Dropdown CreateDropdown(Image roleIcon)
         {
             var dropdown = new Dropdown
             {
                 Parent = _detailsButton,
-                Width = 150
+                Width = 135
             };
             dropdown.Items.Add(_placeholderRoleName);
             foreach (var role in _availableRoles.OrderBy(role => role.Name.ToLowerInvariant()))
             {
                 dropdown.Items.Add(role.Name);
             }
+            dropdown.ValueChanged += delegate
+            {
+                roleIcon.Texture = _availableRoles.FirstOrDefault(role => role.Name.Equals(dropdown.SelectedItem))?.Icon ?? null;
+            };
             return dropdown;
         }
 
