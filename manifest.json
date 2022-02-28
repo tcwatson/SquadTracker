@@ -7,7 +7,7 @@
 
   "description": "Tracks current and former squad members, and lets you assign roles to them.",
   "dependencies": {
-    "bh.blishhud": ">=0.5.2"
+    "bh.blishhud": ">=0.11.0"
   },
   "url": "https://github.com/tcwatson/SquadTracker",
   "contributors": [
