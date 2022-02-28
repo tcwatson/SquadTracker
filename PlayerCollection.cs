@@ -108,8 +108,8 @@ namespace Torlando.SquadTracker
         private DetailsButton _detailsButton;
         private Dropdown _dropdown1;
         private Dropdown _dropdown2;
-        private Image _roleIcon1 = new Image { Size = new Point(32, 32) };
-        private Image _roleIcon2 = new Image { Size = new Point(32, 32) };
+        private Image _roleIcon1 = new Image { Size = new Point(27, 27) };
+        private Image _roleIcon2 = new Image { Size = new Point(27, 27) };
         private Panel _activePlayerPanel;
         private Panel _formerPlayerPanel;
         private Func<uint, uint, AsyncTexture2D> _iconGetter;
