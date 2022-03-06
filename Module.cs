@@ -285,9 +285,10 @@ namespace Torlando.SquadTracker
         // happens when you disable the module
         protected override void Unload()
         {
-            // Unload here
-            Console.WriteLine("unloaded");
-            // All static members must be manually unset
+            _tabPanel?.Dispose();
+
+            GameService.Overlay.BlishHudWindow.RemoveTab(_windowTab);
+            _windowTab = null;
         }
 
         private AsyncTexture2D GetSpecializationIcon(uint professionCode, uint specializationCode)
