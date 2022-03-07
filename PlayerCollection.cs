@@ -85,6 +85,7 @@ namespace Torlando.SquadTracker
                 if(TryGetPlayer(arcPlayer, out var playerToRemove))
                 {
                     playerToRemove.RemovePlayerFromActivePanel();
+                    return;
                 }
                 else
                 {
