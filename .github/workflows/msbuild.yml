@@ -52,6 +52,6 @@ jobs:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
         prerelease: true
         files: |
-          SquadTracker.bhm
+          /home/runner/work/SquadTracker/SquadTracker/artifact/SquadTracker.bhm
         automatic_release_tag: testing-actions
         title: Testing Automatic Releases
