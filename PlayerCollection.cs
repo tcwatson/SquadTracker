@@ -1,5 +1,4 @@
-﻿using Blish_HUD;
-using Blish_HUD.ArcDps.Common;
+﻿using Blish_HUD.ArcDps.Common;
 using Blish_HUD.Content;
 using Blish_HUD.Controls;
 using Microsoft.Xna.Framework;
@@ -23,8 +22,6 @@ namespace Torlando.SquadTracker
 
         private Panel _activePlayerPanel;
         private Panel _formerPlayerPanel;
-
-        private static readonly Logger Logger = Logger.GetLogger<Module>();
 
         public PlayerCollection(ConcurrentDictionary<string, CommonFields.Player> arcPlayersInSquad, Panel activePlayerPanel, Panel formerPlayerPanel)
         {
@@ -111,17 +108,9 @@ namespace Torlando.SquadTracker
 
         private bool TryGetPlayer(CommonFields.Player arcPlayer, out PlayerDisplay playerDisplay)
         {
-            try
-            {
-                playerDisplay = _playerDisplays.First(x => x.AccountName.Equals(arcPlayer.AccountName));
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Logger.Error($"Caught exception while trying to get PlayerDisplay to remove from Current Squad Members: {ex}");
-                playerDisplay = null;
-                return false;
-            }
+            
+            playerDisplay = _playerDisplays.FirstOrDefault(x => x.AccountName.Equals(arcPlayer.AccountName));
+            return playerDisplay != null;
         }
     }
 
