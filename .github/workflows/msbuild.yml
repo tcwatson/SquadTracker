@@ -64,5 +64,4 @@ jobs:
         prerelease: true
         files: |
           /home/runner/work/SquadTracker/SquadTracker/artifact/SquadTracker.bhm
-        automatic_release_tag: "${{ steps.project-version.outputs.version }}"
-        title: Testing Automatic Releases
+        automatic_release_tag: "v${{ steps.project-version.outputs.version }}"
