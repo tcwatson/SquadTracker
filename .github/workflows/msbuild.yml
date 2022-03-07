@@ -3,8 +3,8 @@ name: MSBuild
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    paths:
+    - '**/manifest.json'
 
 env:
   # Path to the solution file relative to the root of the project.
