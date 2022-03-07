@@ -1,4 +1,5 @@
-﻿using Blish_HUD.ArcDps.Common;
+﻿using Blish_HUD;
+using Blish_HUD.ArcDps.Common;
 using Blish_HUD.Content;
 using Blish_HUD.Controls;
 using Microsoft.Xna.Framework;
@@ -10,6 +11,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace Torlando.SquadTracker
 {
@@ -21,6 +23,8 @@ namespace Torlando.SquadTracker
 
         private Panel _activePlayerPanel;
         private Panel _formerPlayerPanel;
+
+        private static readonly Logger Logger = Logger.GetLogger<Module>();
 
         public PlayerCollection(ConcurrentDictionary<string, CommonFields.Player> arcPlayersInSquad, Panel activePlayerPanel, Panel formerPlayerPanel)
         {
@@ -35,7 +39,7 @@ namespace Torlando.SquadTracker
         {
             if (_players.TryGetValue(arcPlayer.AccountName, out var existingPlayer))
             {
-                var playerDisplay = GetPlayer(arcPlayer);
+                _ = TryGetPlayer(arcPlayer, out var playerDisplay);
 
                 // Move from former players if player rejoined
                 if (playerDisplay?.IsFormerSquadMember ?? false)
@@ -75,8 +79,19 @@ namespace Torlando.SquadTracker
         public void RemovePlayerFromActivePanel(CommonFields.Player arcPlayer)
         {
             //if (arcPlayer.Self && !_players.Any(x => x.IsSelf)) return; //Don't remove yourself, unless you changed characters
-            var playerToRemove = GetPlayer(arcPlayer);
-            playerToRemove.RemovePlayerFromActivePanel();
+            var retries = 3;
+            while(retries > 0)
+            {
+                if(TryGetPlayer(arcPlayer, out var playerToRemove))
+                {
+                    playerToRemove.RemovePlayerFromActivePanel();
+                }
+                else
+                {
+                    Thread.Sleep(3000);
+                    retries--;
+                }
+            }
         }
 
         public void ClearFormerPlayers()
@@ -93,9 +108,19 @@ namespace Torlando.SquadTracker
             return _arcPlayersInSquad.First(x => x.Value.CharacterName.Equals(characterName)).Value;
         }
 
-        private PlayerDisplay GetPlayer(CommonFields.Player arcPlayer)
+        private bool TryGetPlayer(CommonFields.Player arcPlayer, out PlayerDisplay playerDisplay)
         {
-            return _playerDisplays.First(x => x.AccountName.Equals(arcPlayer.AccountName));
+            try
+            {
+                playerDisplay = _playerDisplays.First(x => x.AccountName.Equals(arcPlayer.AccountName));
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error($"Caught exception while trying to get PlayerDisplay to remove from Current Squad Members: {ex}");
+                playerDisplay = null;
+                return false;
+            }
         }
     }
 
