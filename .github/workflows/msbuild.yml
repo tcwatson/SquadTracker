@@ -63,8 +63,8 @@ jobs:
     - uses: marvinpinto/action-automatic-releases@latest
       with: 
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        prerelease: "${{ steps.project-version.outputs.version }}"
+        prerelease: true
         files: |
           /home/runner/work/SquadTracker/SquadTracker/artifact/SquadTracker.bhm
-        automatic_release_tag: testing-actions
+        automatic_release_tag: "${{ steps.project-version.outputs.version }}"
         title: Testing Automatic Releases
