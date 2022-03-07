@@ -48,11 +48,30 @@ jobs:
     needs: build
     steps:
     - uses: actions/download-artifact@v3
+    
+    - name: Unzip BHM
+      shell: bash
+      run: |
+        unzip /home/runner/work/SquadTracker/SquadTracker/artifact/SquadTracker.bhm
+        ls
 
+    - name: Parse manifest version
+      shell: bash
+      run: |
+          content=`cat ./manifest.json`
+          # the following lines are only required for multi line json
+          content="${content//'%'/'%25'}"
+          content="${content//$'\n'/'%0A'}"
+          content="${content//$'\r'/'%0D'}"
+          # end of optional handling for multi line json
+          echo "::set-output name=manifestJson::$content"
+          
+    - run: | 
+        echo "${{fromJson(steps.set_var.outputs.manifestJson).version}}"
     - uses: marvinpinto/action-automatic-releases@latest
       with: 
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        prerelease: true
+        prerelease: "${{fromJson(steps.set_var.outputs.manifestJson).version}}"
         files: |
           /home/runner/work/SquadTracker/SquadTracker/artifact/SquadTracker.bhm
         automatic_release_tag: testing-actions
