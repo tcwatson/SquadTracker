@@ -92,7 +92,7 @@ jobs:
         git clone https://github.com/tcwatson/bhud-pkgs.git
         cd bhud-pkgs
         git checkout -b "squadtracker_v${{ steps.project-version.outputs.version }}"
-        Install-Module BhudLib
+        Install-Module BhudLib -force
         Import-Module BhudLib
         $module = Get-BhudModule -Url "https://github.com/tcwatson/SquadTracker/releases/download/v${{ steps.project-version.outputs.version }}/SquadTracker.bhm"
         $pkg = Build-BhudPkgManifest -Url "https://github.com/tcwatson/SquadTracker/releases/download/v${{ steps.project-version.outputs.version }}/SquadTracker.bhm"
