@@ -97,6 +97,8 @@ jobs:
         $module = Get-BhudModule -Url "https://github.com/tcwatson/SquadTracker/releases/download/v${{ steps.project-version.outputs.version }}/SquadTracker.bhm"
         $pkg = Build-BhudPkgManifest -Url "https://github.com/tcwatson/SquadTracker/releases/download/v${{ steps.project-version.outputs.version }}/SquadTracker.bhm"
         Save-BhudPackage -Pkg $pkg -RepoRoot ".\manifests"
+        git config user.email "10892630+tcwatson@users.noreply.github.com"
+        git config user.name "tcwatson"
         git add -A
         git commit -S -m "SquadTracker v${{ steps.project-version.outputs.version }}"
         git push -u origin squadtracker_v${{ steps.project-version.outputs.version }}
