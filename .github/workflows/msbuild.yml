@@ -108,7 +108,7 @@ jobs:
         $pkg = Build-BhudPkgManifest -Url "https://github.com/tcwatson/SquadTracker/releases/download/v${{ steps.project-version.outputs.version }}/SquadTracker.bhm"
         Save-BhudPackage -Pkg $pkg -RepoRoot ".\manifests"
         git add -A
-        git commit -S -m "SquadTracker v${{ steps.project-version.outputs.version }}"
+        git commit -m "SquadTracker v${{ steps.project-version.outputs.version }}"
         git push -u origin squadtracker_v${{ steps.project-version.outputs.version }}
 
    
