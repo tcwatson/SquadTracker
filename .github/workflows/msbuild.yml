@@ -78,7 +78,7 @@ jobs:
     - name: Unzip BHM
       shell: bash
       run: |
-        unzip /home/runner/work/SquadTracker/SquadTracker/artifact/SquadTracker.bhm
+        unzip D:\a\SquadTracker\SquadTracker\artifact\SquadTracker.bhm
 
     - name: Parse manifest version
       id: project-version
