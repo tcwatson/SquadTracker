@@ -65,3 +65,66 @@ jobs:
         files: |
           /home/runner/work/SquadTracker/SquadTracker/artifact/SquadTracker.bhm
         automatic_release_tag: "v${{ steps.project-version.outputs.version }}"
+
+  publish-manifest:
+    name: Publish Manifest
+    runs-on: windows-latest
+    needs: pre-release
+    
+    steps:
+    - uses: actions/download-artifact@v3
+    
+    - name: Unzip BHM
+      shell: bash
+      run: |
+        unzip /home/runner/work/SquadTracker/SquadTracker/artifact/SquadTracker.bhm
+
+    - name: Parse manifest version
+      id: project-version
+      uses: euberdeveloper/ga-project-version@main
+      with:
+        path: ./manifest.json
+
+    - name: Checkout bhud-pkgs fork
+      shell: powershell
+      run: |
+        git clone https://github.com/tcwatson/bhud-pkgs.git
+    
+    - name: Change Directory
+      shell: powershell
+      run: |
+        cd bhud-pkgs
+    
+    - name: Checkout new branch
+      shell: powershell
+      run: |
+        git checkout -b "squadtracker_v${{ steps.project-version.outputs.version }}"
+    
+    - name: Install and Import BhudLib
+      shell: powershell
+      run: |
+        Install-Module BhudLib;
+        Import-Module BhudLib;
+        
+    - name: Pass a Url that points to the hosted bhm file
+      shell: powershell
+      run: |
+        $module = Get-BhudModule -Url "https://github.com/tcwatson/SquadTracker/releases/download/v${{ steps.project-version.outputs.version }}/SquadTracker.bhm"
+        
+    - name: Build the module package manifest
+      shell: powershell
+      run: |
+        $pkg = Build-BhudPkgManifest -Url "https://github.com/tcwatson/SquadTracker/releases/download/v${{ steps.project-version.outputs.version }}/SquadTracker.bhm"
+      
+    - name: Generate new manifest file
+      shell: powershell
+      run: |
+        Save-BhudPackage -Pkg $pkg -RepoRoot ".\manifests"
+    
+    - name: Commit and push manifest
+      shell: powershell
+      run: |
+        git add -A
+        git commit -S -m "SquadTracker v${{ steps.project-version.outputs.version }}"
+        git push -u origin squadtracker_v${{ steps.project-version.outputs.version }}
+        
