@@ -87,7 +87,7 @@ jobs:
         path: ./manifest.json
     
     - name: Create Manifest
-      shell: powershell
+      shell: pwsh
       run: |
         git clone https://github.com/tcwatson/bhud-pkgs.git
         cd bhud-pkgs
