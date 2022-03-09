@@ -7,6 +7,7 @@ using Blish_HUD.Modules;
 using Blish_HUD.Modules.Managers;
 using Blish_HUD.Settings;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -37,8 +38,8 @@ namespace Torlando.SquadTracker
 
         #region Textures
 
-        private IReadOnlyDictionary<uint, AsyncTexture2D> _professionIcons;
-        private IReadOnlyDictionary<uint, AsyncTexture2D> _specializationIcons;
+        private IReadOnlyDictionary<uint, Texture2D> _professionIcons;
+        private IReadOnlyDictionary<uint, Texture2D> _specializationIcons;
 
         #endregion
 
@@ -92,6 +93,8 @@ namespace Torlando.SquadTracker
 
         private async Task LoadSpecializationIconsAsync()
         {
+            const bool useTangoIcons = true; //ToDo: Make this user configurable
+
             var connection = new Gw2Sharp.Connection();
             using var client = new Gw2Sharp.Gw2Client(connection);
             var webApiClient = client.WebApi.V2;
@@ -101,7 +104,7 @@ namespace Torlando.SquadTracker
 
             _professionIcons = professions.ToDictionary(
                 keySelector: (profession) => (uint)profession.Code,
-                (profession) => GameService.Content.GetRenderServiceTexture(profession.IconBig)
+                (profession) => ContentsManager.GetTexture(Specialization.GetCoreIconPath((uint)profession.Code, useTangoIcons))
             );
 
             var specializationClient = webApiClient.Specializations;
@@ -109,7 +112,7 @@ namespace Torlando.SquadTracker
 
             _specializationIcons = eliteSpecs.ToDictionary(
                 keySelector: (spec) => (uint)spec.Id,
-                (spec) => GameService.Content.GetRenderServiceTexture(spec.ProfessionIconBig)
+                (spec) => ContentsManager.GetTexture(Specialization.GetEliteIconPath((uint)spec.Id, useTangoIcons))
             );
         }
 

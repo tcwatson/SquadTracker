@@ -95,5 +95,22 @@ namespace Torlando.SquadTracker
             59, // Mirage
             66, // Virtuoso
         };
+
+        public static string GetEliteIconPath(uint elite, bool useTangoIcons)
+        {
+            var folder = useTangoIcons ? "professions_tango" : "professions_beige";
+            return @$"{folder}\{GetEliteName(elite)}.png";
+        }
+
+        public static string GetCoreIconPath(uint core, bool useTangoIcons)
+        {
+            var folder = useTangoIcons ? "professions_tango" : "professions_beige";
+            return @$"{folder}\{GetCoreName(core)}.png";
+        }
+
+        private static string GetEliteName(uint elite)
+        {
+            return GetEliteName(elite, uint.MaxValue); //core uint not needed for elites
+        }
     }
 }
