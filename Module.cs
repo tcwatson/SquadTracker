@@ -87,32 +87,22 @@ namespace Torlando.SquadTracker
         /// </summary>
         protected override async Task LoadAsync()
         {
-            await LoadSpecializationIconsAsync();
+            LoadSpecializationIconsAsync();
             await LoadRoles();
         }
 
-        private async Task LoadSpecializationIconsAsync()
+        private void LoadSpecializationIconsAsync()
         {
             const bool useTangoIcons = true; //ToDo: Make this user configurable
 
-            var connection = new Gw2Sharp.Connection();
-            using var client = new Gw2Sharp.Gw2Client(connection);
-            var webApiClient = client.WebApi.V2;
-
-            var professionsClient = webApiClient.Professions;
-            var professions = await professionsClient.AllAsync();
-
-            _professionIcons = professions.ToDictionary(
-                keySelector: (profession) => (uint)profession.Code,
-                (profession) => ContentsManager.GetTexture(Specialization.GetCoreIconPath((uint)profession.Code, useTangoIcons))
+            _professionIcons = Specialization.ProfessionCodes.ToDictionary(
+                keySelector: (profession) => profession,
+                (profession) => ContentsManager.GetTexture(Specialization.GetCoreIconPath(profession, useTangoIcons))
             );
 
-            var specializationClient = webApiClient.Specializations;
-            var eliteSpecs = await specializationClient.ManyAsync(Specialization.EliteCodes);
-
-            _specializationIcons = eliteSpecs.ToDictionary(
-                keySelector: (spec) => (uint)spec.Id,
-                (spec) => ContentsManager.GetTexture(Specialization.GetEliteIconPath((uint)spec.Id, useTangoIcons))
+            _specializationIcons = Specialization.EliteCodes.ToDictionary(
+                keySelector: (spec) => (uint)spec,
+                (spec) => ContentsManager.GetTexture(Specialization.GetEliteIconPath((uint)spec, useTangoIcons))
             );
         }
 

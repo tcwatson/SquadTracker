@@ -57,6 +57,19 @@ namespace Torlando.SquadTracker
             };
         }
 
+        public static readonly IReadOnlyCollection<uint> ProfessionCodes = new uint[]
+        {
+            1, // Guardian
+            2, // Warrior
+            3, // Engineer
+            4, // Ranger
+            5, // Thief
+            6, // Elementalist
+            7, // Mesmer
+            8, // Necromancer
+            9  // Revenant
+        };
+
         public static readonly IReadOnlyCollection<int> EliteCodes = new[]
         {
             18, // Berserker
