@@ -75,6 +75,13 @@ namespace Torlando.SquadTracker
                 true, () => "Enable Color Icons", 
                 () => "When enabled, replaces the beige icons with icons colored to match their profession color"
             );
+            _areColorIconsEnabled.SettingChanged += SwapIcons;
+        }
+
+        private void SwapIcons(object sender, ValueChangedEventArgs<bool> e)
+        {
+            LoadSpecializationIcons();
+            _playerCollection.SwapIcons();
         }
 
         /// <summary>
@@ -92,11 +99,11 @@ namespace Torlando.SquadTracker
         /// </summary>
         protected override async Task LoadAsync()
         {
-            LoadSpecializationIconsAsync();
+            LoadSpecializationIcons();
             await LoadRoles();
         }
 
-        private void LoadSpecializationIconsAsync()
+        private void LoadSpecializationIcons()
         {
             bool useTangoIcons = _areColorIconsEnabled.Value;
 

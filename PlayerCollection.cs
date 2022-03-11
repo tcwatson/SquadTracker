@@ -101,6 +101,14 @@ namespace Torlando.SquadTracker
             }
         }
 
+        public void SwapIcons()
+        {
+            foreach (var playerDisplay in _playerDisplays)
+            {
+                playerDisplay.RefreshIcon();
+            }
+        }
+
         private CommonFields.Player GetArcPlayer(string characterName)
         {
             return _arcPlayersInSquad.First(x => x.Value.CharacterName.Equals(characterName)).Value;
@@ -181,6 +189,11 @@ namespace Torlando.SquadTracker
         {
             _player = player;
             UpdateDetailsButtonWithNewCharacter();
+        }
+
+        public void RefreshIcon()
+        {
+            _detailsButton.Icon = _iconGetter(_player.Profession, _player.CurrentSpecialization);
         }
 
         private void CreateDetailsButtonAndDropDowns()
