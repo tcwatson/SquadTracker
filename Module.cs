@@ -53,13 +53,13 @@ namespace Torlando.SquadTracker
         private MenuItem _squadRolesMenu;
         private Panel _menu;
         private StandardButton _clearFormerSquadButton;
-        private List<DetailsButton> _playersDetails = new List<DetailsButton>();
 
         #endregion
 
         private PlayerCollection _playerCollection;
 
         private ConcurrentDictionary<string, CommonFields.Player> _arcPlayers;
+        private SettingEntry<bool> _areColorIconsEnabled;
 
         [ImportingConstructor]
         public Module([Import("ModuleParameters")] ModuleParameters moduleParameters) : base(moduleParameters) { }
@@ -70,6 +70,11 @@ namespace Torlando.SquadTracker
         /// </summary>
         protected override void DefineSettings(SettingCollection settings)
         {
+            _areColorIconsEnabled = settings.DefineSetting(
+                "EnableColorIcons", 
+                true, () => "Enable Color Icons", 
+                () => "When enabled, replaces the beige icons with icons colored to match their profession color"
+            );
         }
 
         /// <summary>
@@ -93,7 +98,7 @@ namespace Torlando.SquadTracker
 
         private void LoadSpecializationIconsAsync()
         {
-            const bool useTangoIcons = true; //ToDo: Make this user configurable
+            bool useTangoIcons = _areColorIconsEnabled.Value;
 
             _professionIcons = Specialization.ProfessionCodes.ToDictionary(
                 keySelector: (profession) => profession,
