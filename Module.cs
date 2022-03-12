@@ -78,13 +78,13 @@ namespace Torlando.SquadTracker
                 true, () => "Enable Color Icons", 
                 () => "When enabled, replaces the monochrome icons with icons colored to match their profession color"
             );
-            _areColorIconsEnabled.SettingChanged += SwapIcons;
+            _areColorIconsEnabled.SettingChanged += RefreshIcons;
         }
 
-        private void SwapIcons(object sender, ValueChangedEventArgs<bool> e)
+        private void RefreshIcons(object sender, ValueChangedEventArgs<bool> e)
         {
             LoadSpecializationIcons();
-            _playerCollection.SwapIcons();
+            _playerCollection.RefreshIcons();
         }
 
         /// <summary>

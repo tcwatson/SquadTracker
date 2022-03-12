@@ -101,7 +101,7 @@ namespace Torlando.SquadTracker
             }
         }
 
-        public void SwapIcons()
+        public void RefreshIcons()
         {
             foreach (var playerDisplay in _playerDisplays)
             {
