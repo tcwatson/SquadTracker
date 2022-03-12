@@ -123,7 +123,7 @@ namespace Torlando.SquadTracker
 
         private static string GetEliteName(uint elite)
         {
-            return GetEliteName(elite, uint.MaxValue); //core uint not needed for elites
+            return GetEliteName(elite, default); //core uint not needed for elites
         }
     }
 }
