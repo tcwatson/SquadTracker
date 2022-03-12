@@ -109,6 +109,7 @@ namespace Torlando.SquadTracker
             66, // Virtuoso
         };
 
+        #region ToDo - extract elsewhere as GetIconPath(string iconName, bool useColoredIcons
         public static string GetEliteIconPath(uint elite, bool useColoredIcons)
         {
             var folder = useColoredIcons ? "professions_colored" : "professions_monochrome";
@@ -120,6 +121,7 @@ namespace Torlando.SquadTracker
             var folder = useColoredIcons ? "professions_colored" : "professions_monochrome";
             return @$"{folder}\{GetCoreName(core)}.png";
         }
+        #endregion
 
         private static string GetEliteName(uint elite)
         {
