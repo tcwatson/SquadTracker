@@ -109,15 +109,15 @@ namespace Torlando.SquadTracker
             66, // Virtuoso
         };
 
-        public static string GetEliteIconPath(uint elite, bool useTangoIcons)
+        public static string GetEliteIconPath(uint elite, bool useColoredIcons)
         {
-            var folder = useTangoIcons ? "professions_tango" : "professions_beige";
+            var folder = useColoredIcons ? "professions_colored" : "professions_monochrome";
             return @$"{folder}\{GetEliteName(elite)}.png";
         }
 
-        public static string GetCoreIconPath(uint core, bool useTangoIcons)
+        public static string GetCoreIconPath(uint core, bool useColoredIcons)
         {
-            var folder = useTangoIcons ? "professions_tango" : "professions_beige";
+            var folder = useColoredIcons ? "professions_colored" : "professions_monochrome";
             return @$"{folder}\{GetCoreName(core)}.png";
         }
 

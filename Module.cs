@@ -6,6 +6,7 @@ using Blish_HUD.Controls;
 using Blish_HUD.Modules;
 using Blish_HUD.Modules.Managers;
 using Blish_HUD.Settings;
+using Blish_HUD.Settings.UI.Views;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -51,6 +52,8 @@ namespace Torlando.SquadTracker
         private RolesPanel _rolesPanel;
         private MenuItem _squadMembersMenu;
         private MenuItem _squadRolesMenu;
+        private MenuItem _settingsMenu;
+        private SettingsView _settingsPanel;
         private Panel _menu;
         private StandardButton _clearFormerSquadButton;
 
@@ -73,7 +76,7 @@ namespace Torlando.SquadTracker
             _areColorIconsEnabled = settings.DefineSetting(
                 "EnableColorIcons", 
                 true, () => "Enable Color Icons", 
-                () => "When enabled, replaces the beige icons with icons colored to match their profession color"
+                () => "When enabled, replaces the monochrome icons with icons colored to match their profession color"
             );
             _areColorIconsEnabled.SettingChanged += SwapIcons;
         }
@@ -105,16 +108,16 @@ namespace Torlando.SquadTracker
 
         private void LoadSpecializationIcons()
         {
-            bool useTangoIcons = _areColorIconsEnabled.Value;
+            bool useColoredIcons = _areColorIconsEnabled.Value;
 
             _professionIcons = Specialization.ProfessionCodes.ToDictionary(
                 keySelector: (profession) => profession,
-                (profession) => ContentsManager.GetTexture(Specialization.GetCoreIconPath(profession, useTangoIcons))
+                (profession) => ContentsManager.GetTexture(Specialization.GetCoreIconPath(profession, useColoredIcons))
             );
 
             _specializationIcons = Specialization.EliteCodes.ToDictionary(
                 keySelector: (spec) => (uint)spec,
-                (spec) => ContentsManager.GetTexture(Specialization.GetEliteIconPath((uint)spec, useTangoIcons))
+                (spec) => ContentsManager.GetTexture(Specialization.GetEliteIconPath((uint)spec, useColoredIcons))
             );
         }
 
@@ -247,6 +250,8 @@ namespace Torlando.SquadTracker
 
             _squadRolesMenu = menuCategories.AddMenuItem("Squad Roles");
 
+            SetupSettingsMenu(menuCategories);
+
             _squadMembersPanel = new FlowPanel
             {
                 FlowDirection = ControlFlowDirection.LeftToRight,
@@ -279,6 +284,13 @@ namespace Torlando.SquadTracker
             {
                 _playerCollection.ClearFormerPlayers();
             };
+        }
+
+        private void SetupSettingsMenu(Menu menu)
+        {
+            _settingsMenu = menu.AddMenuItem("Settings");
+            _settingsPanel = new SettingsView(SettingsManager.ModuleSettings);
+            
         }
 
         protected override void Update(GameTime gameTime)
