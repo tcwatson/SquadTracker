@@ -70,7 +70,7 @@ namespace Torlando.SquadTracker
             9  // Revenant
         };
 
-        public static readonly IReadOnlyCollection<int> EliteCodes = new[]
+        public static readonly IReadOnlyCollection<uint> EliteCodes = new uint[]
         {
             18, // Berserker
             61, // Spellbreaker

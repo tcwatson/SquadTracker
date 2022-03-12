@@ -108,16 +108,16 @@ namespace Torlando.SquadTracker
 
         private void LoadSpecializationIcons()
         {
-            bool useColoredIcons = _areColorIconsEnabled.Value;
+            bool useTangoIcons = _areColorIconsEnabled.Value;
 
             _professionIcons = Specialization.ProfessionCodes.ToDictionary(
                 keySelector: (profession) => profession,
-                (profession) => ContentsManager.GetTexture(Specialization.GetCoreIconPath(profession, useColoredIcons))
+                (profession) => ContentsManager.GetTexture(Specialization.GetCoreIconPath(profession, useTangoIcons))
             );
 
             _specializationIcons = Specialization.EliteCodes.ToDictionary(
-                keySelector: (spec) => (uint)spec,
-                (spec) => ContentsManager.GetTexture(Specialization.GetEliteIconPath((uint)spec, useColoredIcons))
+                keySelector: (spec) => spec,
+                (spec) => ContentsManager.GetTexture(Specialization.GetEliteIconPath(spec, useTangoIcons))
             );
         }
 

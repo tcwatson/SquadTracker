@@ -61,7 +61,7 @@ namespace Torlando.SquadTracker
 
         public void UpdatePlayerSpecialization(string characterName, uint newSpec)
         {
-            if (Specialization.EliteCodes.Contains((int)newSpec) == false) return;
+            if (Specialization.EliteCodes.Contains(newSpec) == false) return;
 
             var allPlayers = _players.Values.Concat(
                 _players.ToList().SelectMany(player => player.Value.PreviouslyPlayedCharacters)
