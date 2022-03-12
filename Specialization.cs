@@ -57,7 +57,20 @@ namespace Torlando.SquadTracker
             };
         }
 
-        public static readonly IReadOnlyCollection<int> EliteCodes = new[]
+        public static readonly IReadOnlyCollection<uint> ProfessionCodes = new uint[]
+        {
+            1, // Guardian
+            2, // Warrior
+            3, // Engineer
+            4, // Ranger
+            5, // Thief
+            6, // Elementalist
+            7, // Mesmer
+            8, // Necromancer
+            9  // Revenant
+        };
+
+        public static readonly IReadOnlyCollection<uint> EliteCodes = new uint[]
         {
             18, // Berserker
             61, // Spellbreaker
@@ -95,5 +108,24 @@ namespace Torlando.SquadTracker
             59, // Mirage
             66, // Virtuoso
         };
+
+        #region ToDo - extract elsewhere as GetIconPath(string iconName, bool useColoredIcons
+        public static string GetEliteIconPath(uint elite, bool useColoredIcons)
+        {
+            var folder = useColoredIcons ? "professions_colored" : "professions_monochrome";
+            return @$"{folder}\{GetEliteName(elite)}.png";
+        }
+
+        public static string GetCoreIconPath(uint core, bool useColoredIcons)
+        {
+            var folder = useColoredIcons ? "professions_colored" : "professions_monochrome";
+            return @$"{folder}\{GetCoreName(core)}.png";
+        }
+        #endregion
+
+        private static string GetEliteName(uint elite)
+        {
+            return GetEliteName(elite, default); //core uint not needed for elites
+        }
     }
 }
