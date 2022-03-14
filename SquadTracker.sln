@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SquadTracker", "SquadTracker\SquadTracker.csproj", "{4F5D4893-373F-42F5-9482-CBDC8F8A3449}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SquadTracker.Tests", "SquadTracker.Tests\SquadTracker.Tests.csproj", "{161BBA0D-5CF5-4606-B160-B12842970D0C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -22,6 +24,10 @@ Global
 		{4F5D4893-373F-42F5-9482-CBDC8F8A3449}.Debug|x64.Build.0 = Debug|x64
 		{4F5D4893-373F-42F5-9482-CBDC8F8A3449}.Release|x64.ActiveCfg = Release|x64
 		{4F5D4893-373F-42F5-9482-CBDC8F8A3449}.Release|x64.Build.0 = Release|x64
+		{161BBA0D-5CF5-4606-B160-B12842970D0C}.Debug|x64.ActiveCfg = Debug|x64
+		{161BBA0D-5CF5-4606-B160-B12842970D0C}.Debug|x64.Build.0 = Debug|x64
+		{161BBA0D-5CF5-4606-B160-B12842970D0C}.Release|x64.ActiveCfg = Release|x64
+		{161BBA0D-5CF5-4606-B160-B12842970D0C}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
