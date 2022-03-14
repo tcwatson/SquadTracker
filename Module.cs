@@ -250,7 +250,7 @@ namespace Torlando.SquadTracker
 
             _squadRolesMenu = menuCategories.AddMenuItem("Squad Roles");
 
-            SetupSettingsMenu(menuCategories);
+            //SetupSettingsMenu(menuCategories);
 
             _squadMembersPanel = new FlowPanel
             {
