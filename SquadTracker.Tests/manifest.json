@@ -1,0 +1,7 @@
+{
+  "name": "Squad Tracker Tests",
+  "version": "0.0.1",
+  "namespace": "Torlando.SquadTracker.Tests",
+  "package": "SquadTracker.Tests.dll",
+  "manifest_version": 1
+}

@@ -1,7 +1,6 @@
 using NUnit.Framework;
-using Torlando.SquadTracker;
 
-namespace SquadTracker.Tests
+namespace Torlando.SquadTracker.Tests
 {
     [TestFixture]
     public class UnitTest1
