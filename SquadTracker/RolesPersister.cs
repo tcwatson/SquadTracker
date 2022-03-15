@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Torlando.SquadTracker.Models;
 
 namespace Torlando.SquadTracker
 {

@@ -2,6 +2,7 @@
 using System.Linq;
 using Blish_HUD.Controls;
 using Microsoft.Xna.Framework;
+using Torlando.SquadTracker.Models;
 
 namespace Torlando.SquadTracker
 {

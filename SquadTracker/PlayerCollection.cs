@@ -11,6 +11,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using Torlando.SquadTracker.Models;
 
 namespace Torlando.SquadTracker
 {
@@ -122,7 +123,7 @@ namespace Torlando.SquadTracker
         }
     }
 
-    public class PlayerDisplay
+    internal class PlayerDisplay
     {
         #region Data
         private Player _player;
