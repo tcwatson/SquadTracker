@@ -1,20 +1,16 @@
-using System;
-using Xunit;
+using NUnit.Framework;
+using Torlando.SquadTracker;
 
 namespace SquadTracker.Tests
 {
+    [TestFixture]
     public class UnitTest1
     {
-        [Fact]
-        public void PassingTest()
+        [Test]
+        public void Test1()
         {
-            Assert.Equal(1, 1);
-        }
-
-        [Fact]
-        public void FailingTest()
-        {
-            Assert.Equal(1, 0);
+            var test = RolesPersister.LoadRolesFromFileSystem("");
+            Assert.IsTrue(true);
         }
     }
 }
