@@ -65,7 +65,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Domain.cs" />
+    <Compile Include="Models\Character.cs" />
+    <Compile Include="Models\Player.cs" />
+    <Compile Include="Models\Role.cs" />
+    <Compile Include="Models\Squad.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="PlayerCollection.cs" />
     <Compile Include="RolesPanel.cs" />
