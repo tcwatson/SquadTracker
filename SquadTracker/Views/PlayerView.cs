@@ -2,7 +2,9 @@
 using Blish_HUD.Content;
 using Blish_HUD.Controls;
 using Blish_HUD.Graphics.UI;
+using Blish_HUD.Modules.Managers;
 using Microsoft.Xna.Framework;
+using Torlando.SquadTracker.Models;
 using Torlando.SquadTracker.Presenters;
 
 namespace Torlando.SquadTracker.Views
@@ -11,15 +13,13 @@ namespace Torlando.SquadTracker.Views
     {
         #region Controls
         private DetailsButton _detailsButton;
-        //private Dropdown _dropdown1;
-        //private Dropdown _dropdown2;
-        //private Image _roleIcon1 = new Image { Size = new Point(27, 27) };
-        //private Image _roleIcon2 = new Image { Size = new Point(27, 27) };
-        private Panel _activePlayerPanel;
-        private Panel _formerPlayerPanel;
-        private Func<uint, uint, AsyncTexture2D> _iconGetter;
-        //private const string _placeholderRoleName = "Select a role...";
+
         #endregion
+
+        public PlayerView(PlayerModel player)
+        {
+            Presenter = new PlayerPresenter(this, player);
+        }
 
         protected override void Build(Container buildPanel)
         {

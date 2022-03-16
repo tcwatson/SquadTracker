@@ -1,10 +1,13 @@
 ﻿using Blish_HUD.Controls;
 using Blish_HUD.Graphics.UI;
+using Blish_HUD.Modules.Managers;
 using Microsoft.Xna.Framework;
+using Torlando.SquadTracker.Models;
+using Torlando.SquadTracker.Views;
 
 namespace Torlando.SquadTracker.SquadPanel
 {
-    internal class SquadPanelView : View
+    internal class SquadPanelView : View<SquadPanelPresenter>
     {
         #region Controls
         private Panel _menuPanel;
@@ -14,7 +17,16 @@ namespace Torlando.SquadTracker.SquadPanel
         private FlowPanel _squadMembersPanel;
         private FlowPanel _formerSquadMembersPanel;
         private StandardButton _clearFormerSquadButton;
+
+        #region Test
+        private StandardButton _addPlayerButton;
         #endregion
+        #endregion
+
+        public SquadPanelView()
+        {
+        }
+
         protected override void Build(Container buildPanel)
         {
             _menuPanel = new Panel
@@ -63,10 +75,29 @@ namespace Torlando.SquadTracker.SquadPanel
                 Text = "Clear",
                 Location = new Point(_formerSquadMembersPanel.Right - 135, _formerSquadMembersPanel.Top + 5)
             };
-            //_clearFormerSquadButton.Click += delegate
-            //{
-            //    _playerCollection.ClearFormerPlayers();
-            //};
+            _clearFormerSquadButton.Click += delegate
+            {
+                Presenter.ClearFormerSquadMembers();
+            };
+
+            #region Test
+            _addPlayerButton = new StandardButton
+            {
+                Parent = buildPanel,
+                Text = "Add Player",
+                Location = new Point(_squadMembersPanel.Right - 135, _squadMembersPanel.Top + 5)
+            };
+            _addPlayerButton.Click += delegate
+            {
+                Presenter.AddPlayer();
+            };
+            #endregion
+        }
+
+        public void SpawnPlayerView(PlayerModel playerModel)
+        {
+            var playerView = new PlayerView(playerModel);
+            playerView.SetPlayerText(playerModel.AccountName);
         }
     }
 }

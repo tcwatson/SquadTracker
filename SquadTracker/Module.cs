@@ -178,7 +178,8 @@ namespace Torlando.SquadTracker
                 icon: ContentsManager.GetTexture(@"textures\commandertag.png"),
                 viewFunc: () => {
                     var view = new SquadPanelView();
-                    return view;
+                    var presenter = new SquadPanelPresenter(view, new Squad(), ContentsManager);
+                    return view.WithPresenter(presenter);
                 },
                 name: "Squad Tracker Tab"
             );

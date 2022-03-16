@@ -3,11 +3,24 @@ using Torlando.SquadTracker.Models;
 
 namespace Torlando.SquadTracker.SquadPanel
 {
-    public class Squad
+    internal class Squad
     {
-        ICollection<PlayerModel> CurrentSquadMembers { get; } = new HashSet<PlayerModel>();
-        ICollection<PlayerModel> FormerSquadMembers { get; } = new HashSet<PlayerModel>();
+        public ICollection<PlayerModel> CurrentSquadMembers { get; } = new HashSet<PlayerModel>();
+        public IReadOnlyCollection<PlayerModel> FormerSquadMembers { get; private set; } = new HashSet<PlayerModel>();
 
-        ICollection<Role> FilledRoles { get; } = new List<Role>();
+        public ICollection<Role> FilledRoles { get; } = new List<Role>();
+
+        public void ClearFormerSquadMembers()
+        {
+            FormerSquadMembers = new HashSet<PlayerModel>();
+        }
+
+
+        #region Test
+        public void AddPlayer(PlayerModel playerModel)
+        {
+            CurrentSquadMembers.Add(playerModel);
+        }
+        #endregion
     }
 }

@@ -1,5 +1,5 @@
-﻿using Blish_HUD.Graphics.UI;
-using Blish_HUD.Modules.Managers;
+﻿using Blish_HUD.Content;
+using Blish_HUD.Graphics.UI;
 using Torlando.SquadTracker.Helpers;
 using Torlando.SquadTracker.Models;
 using Torlando.SquadTracker.Views;
@@ -8,10 +8,8 @@ namespace Torlando.SquadTracker.Presenters
 {
     internal class PlayerPresenter : Presenter<PlayerView, PlayerModel>
     {
-        private readonly ContentsManager _contentsManager;
-        public PlayerPresenter(PlayerView view, PlayerModel model, ContentsManager contentsManager) : base(view, model) 
+        public PlayerPresenter(PlayerView view, PlayerModel model) : base(view, model) 
         {
-            _contentsManager = contentsManager;
         }
 
         public void SetPlayerName()
@@ -19,11 +17,12 @@ namespace Torlando.SquadTracker.Presenters
             View.SetPlayerText($"{Model.CharacterName} ({Model.AccountName})");
         }
 
-        public void SetPlayerIcon()
+        public void SetPlayerIcon(AsyncTexture2D icon)
         {
             //ToDo: how to get Settings here? 
             var iconPath = IconHelper.GetIconPath(Model.CurrentSpecialization, Model.Profession, true);
-            View.SetPlayerIcon(_contentsManager.GetTexture(iconPath));
+            //View.SetPlayerIcon(_contentsManager.GetTexture(iconPath));
+            View.SetPlayerIcon(icon);
         }
     }
 }
