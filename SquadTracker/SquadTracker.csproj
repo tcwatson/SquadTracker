@@ -70,7 +70,7 @@
     <Compile Include="Models\Player.cs" />
     <Compile Include="Models\PlayerModel.cs" />
     <Compile Include="Models\Role.cs" />
-    <Compile Include="Models\Squad.cs" />
+    <Compile Include="SquadPanel\Squad.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="PlayerCollection.cs" />
     <Compile Include="Presenters\PlayerPresenter.cs" />
@@ -78,6 +78,8 @@
     <Compile Include="RolesPanel.cs" />
     <Compile Include="RolesPersister.cs" />
     <Compile Include="Specialization.cs" />
+    <Compile Include="SquadPanel\SquadPanelPresenter.cs" />
+    <Compile Include="SquadPanel\SquadPanelView.cs" />
     <Compile Include="Views\PlayerView.cs" />
     <Compile Include="Views\RoleSelectionView.cs" />
   </ItemGroup>

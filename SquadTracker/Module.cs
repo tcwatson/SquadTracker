@@ -19,6 +19,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Torlando.SquadTracker.Models;
+using Torlando.SquadTracker.SquadPanel;
 using Torlando.SquadTracker.Views;
 
 namespace Torlando.SquadTracker
@@ -176,9 +177,8 @@ namespace Torlando.SquadTracker
             _newTab = GameService.Overlay.BlishHudWindow.AddTab(
                 icon: ContentsManager.GetTexture(@"textures\commandertag.png"),
                 viewFunc: () => {
-                    var view = new PlayerView();
-                    var presenter = new Presenters.PlayerPresenter(view, new PlayerModel { AccountName = "test.1234", CharacterName = "asdf" }, ContentsManager);
-                    return view.WithPresenter(presenter);
+                    var view = new SquadPanelView();
+                    return view;
                 },
                 name: "Squad Tracker Tab"
             );
