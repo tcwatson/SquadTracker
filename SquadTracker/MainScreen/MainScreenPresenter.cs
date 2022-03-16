@@ -1,6 +1,8 @@
-﻿using Blish_HUD.Graphics.UI;
+﻿using System.Collections.Generic;
+using Blish_HUD.Graphics.UI;
 using Blish_HUD.Modules.Managers;
 using Blish_HUD.Settings;
+using Torlando.SquadTracker.RolesScreen;
 using Torlando.SquadTracker.SquadPanel;
 
 namespace Torlando.SquadTracker.MainScreen
@@ -11,16 +13,16 @@ namespace Torlando.SquadTracker.MainScreen
         private SquadPanelPresenter _squadPanelPresenter;
         private SquadPanelView _squadPanelView;
 
-        //private RolesPresenter _rolesPresenter;
-        //private RolesView _rolesView;
+        private RolesPresenter _rolesPresenter;
+        private RolesView _rolesView;
 
-        public MainScreenPresenter(MainScreenView view, ContentsManager contentsManager, SettingEntry<bool> areColorIconsEnabled) : base (view, 0) 
+        public MainScreenPresenter(MainScreenView view, ContentsManager contentsManager, SettingEntry<bool> areColorIconsEnabled, ICollection<Role> roles) : base (view, 0)
         {
             _squadPanelView = new SquadPanelView();
             _squadPanelPresenter = new SquadPanelPresenter(_squadPanelView, new Squad(), contentsManager, areColorIconsEnabled);
 
-            //_rolesView = new RolesView();
-            //_rolesPresenter = new RolesPresenter(_rolesView, new System.Collections.ObjectModel.ObservableCollection<Role> { new Role("Alacrtiy") { IconPath = @"icons\alacrity.png" } });
+            _rolesView = new RolesView();
+            _rolesPresenter = new RolesPresenter(_rolesView, roles);
         }
 
         public IView SelectView(string name)
@@ -28,8 +30,8 @@ namespace Torlando.SquadTracker.MainScreen
             return name switch
             {
                 "Squad Members" => _squadPanelView.WithPresenter(_squadPanelPresenter),
-                //"Squad Roles" => _rolesView.WithPresenter(_rolesPresenter),
-                _ => new SquadPanelView()
+                "Squad Roles" => _rolesView.WithPresenter(_rolesPresenter),
+                _ => _squadPanelView.WithPresenter(_squadPanelPresenter),
             };
         }
         

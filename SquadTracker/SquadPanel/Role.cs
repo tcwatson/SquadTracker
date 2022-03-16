@@ -1,24 +1,28 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace Torlando.SquadTracker.SquadPanel
 {
     public class Role
     {
-        public string Name { get; private set; }
+        public string Name { get; }
 
         [JsonIgnore]
         public Texture2D Icon { get; set; }
 
         public string IconPath { get; set; } = string.Empty;
 
-        [JsonConstructor]
         public Role(string name)
         {
             Name = name;
         }
 
-        public Role() { }
+        [JsonConstructor]
+        public Role(string name, string iconPath)
+        {
+            Name = name;
+            IconPath = iconPath;
+        }
 
         public Role(string name, string iconPath, Texture2D icon)
         {

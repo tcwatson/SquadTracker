@@ -79,6 +79,8 @@
     <Compile Include="SquadPanel\RoleSelectionPresenter.cs" />
     <Compile Include="RolesPanel.cs" />
     <Compile Include="RolesPersister.cs" />
+    <Compile Include="RolesScreen\RolesPresenter.cs" />
+    <Compile Include="RolesScreen\RolesView.cs" />
     <Compile Include="Specialization.cs" />
     <Compile Include="SquadPanel\SquadPanelPresenter.cs" />
     <Compile Include="SquadPanel\SquadPanelView.cs" />
