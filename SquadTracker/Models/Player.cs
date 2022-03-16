@@ -7,10 +7,6 @@ namespace Torlando.SquadTracker.Models
 {
     internal class Player : INotifyPropertyChanged
     {
-        #region new for mvp refactor
-        public ICollection<Character> KnownCharacters { get; } = new List<Character>();
-        public ICollection<Role> AssignedRoles { get; } = new List<Role>();
-        #endregion
         public Player(CommonFields.Player arcPlayer, Player previousCharacter = null) 
         {
             AccountName = arcPlayer.AccountName;
