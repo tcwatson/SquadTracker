@@ -1,6 +1,5 @@
 ﻿using Blish_HUD.Controls;
 using Blish_HUD.Graphics.UI;
-using Blish_HUD.Modules.Managers;
 using Microsoft.Xna.Framework;
 using Torlando.SquadTracker.Models;
 using Torlando.SquadTracker.Views;
