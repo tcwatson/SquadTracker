@@ -6,7 +6,7 @@ namespace Torlando.SquadTracker.Models
 {
     internal class Character : INotifyPropertyChanged
     {
-        public Character(string name, Player player)
+        public Character(string name, PlayerModel player)
         {
             Name = name;
             Player = player;
@@ -15,7 +15,7 @@ namespace Torlando.SquadTracker.Models
         }
 
         public string Name { get; }
-        public Player Player { get; }
+        public PlayerModel Player { get; }
 
         public uint? Profession { get => profession; set => SetField(ref profession, value); }
         private uint? profession;

@@ -6,10 +6,10 @@ using Torlando.SquadTracker.Views;
 
 namespace Torlando.SquadTracker.Presenters
 {
-    internal class PlayerPresenter : Presenter<PlayerView, Player>
+    internal class PlayerPresenter : Presenter<PlayerView, PlayerModel>
     {
         private readonly ContentsManager _contentsManager;
-        public PlayerPresenter(PlayerView view, Player model, ContentsManager contentsManager) : base(view, model) 
+        public PlayerPresenter(PlayerView view, PlayerModel model, ContentsManager contentsManager) : base(view, model) 
         {
             _contentsManager = contentsManager;
         }

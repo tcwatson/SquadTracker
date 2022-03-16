@@ -9,23 +9,23 @@ namespace Torlando.SquadTracker.Views
 {
     class PlayerView : View<PlayerPresenter>
     {
-        #region UI
+        #region Controls
         private DetailsButton _detailsButton;
-        private Dropdown _dropdown1;
-        private Dropdown _dropdown2;
-        private Image _roleIcon1 = new Image { Size = new Point(27, 27) };
-        private Image _roleIcon2 = new Image { Size = new Point(27, 27) };
+        //private Dropdown _dropdown1;
+        //private Dropdown _dropdown2;
+        //private Image _roleIcon1 = new Image { Size = new Point(27, 27) };
+        //private Image _roleIcon2 = new Image { Size = new Point(27, 27) };
         private Panel _activePlayerPanel;
         private Panel _formerPlayerPanel;
         private Func<uint, uint, AsyncTexture2D> _iconGetter;
-        private const string _placeholderRoleName = "Select a role...";
+        //private const string _placeholderRoleName = "Select a role...";
         #endregion
 
         protected override void Build(Container buildPanel)
         {
             _detailsButton = new DetailsButton
             {
-                Parent = _activePlayerPanel,
+                Parent = buildPanel,
                 //Text = $"{_player.CharacterName} ({_player.AccountName})",
                 IconSize = DetailsIconSize.Small,
                 ShowVignette = true,
@@ -34,8 +34,7 @@ namespace Torlando.SquadTracker.Views
                 //Icon = _iconGetter(_player.Profession, _player.CurrentSpecialization),
                 Size = new Point(354, 90)
             };
-
-
+            //_ = new RoleSelectionView(buildPanel);
 
             //base.Build(buildPanel); // do we need base.Build() ?
         }

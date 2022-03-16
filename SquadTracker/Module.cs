@@ -19,6 +19,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Torlando.SquadTracker.Models;
+using Torlando.SquadTracker.Views;
 
 namespace Torlando.SquadTracker
 {
@@ -57,6 +58,9 @@ namespace Torlando.SquadTracker
         private SettingsView _settingsPanel;
         private Panel _menu;
         private StandardButton _clearFormerSquadButton;
+
+
+        private WindowTab _newTab;
 
         #endregion
 
@@ -168,7 +172,20 @@ namespace Torlando.SquadTracker
         protected override void OnModuleLoaded(EventArgs e)
         {
             _tabPanel = BuildPanel(GameService.Overlay.BlishHudWindow.ContentRegion);
-            _windowTab = GameService.Overlay.BlishHudWindow.AddTab("Squad Tracker", ContentsManager.GetTexture(@"textures\commandertag.png"), _tabPanel);
+            //_windowTab = GameService.Overlay.BlishHudWindow.AddTab("Squad Tracker", ContentsManager.GetTexture(@"textures\commandertag.png"), _tabPanel);
+            _newTab = GameService.Overlay.BlishHudWindow.AddTab(
+                icon: ContentsManager.GetTexture(@"textures\commandertag.png"),
+                viewFunc: () => {
+                    var view = new PlayerView();
+                    var presenter = new Presenters.PlayerPresenter(view, new PlayerModel { AccountName = "test.1234", CharacterName = "asdf" }, ContentsManager);
+                    return view.WithPresenter(presenter);
+                },
+                name: "Squad Tracker Tab"
+            );
+            
+
+
+
             GameService.ArcDps.Common.Activate();
             GameService.ArcDps.Common.PlayerAdded += PlayerAddedEvent;
             GameService.ArcDps.Common.PlayerRemoved += PlayerRemovedEvent;
