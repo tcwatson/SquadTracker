@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System.Text.Json.Serialization;
 
-namespace Torlando.SquadTracker.Models
+namespace Torlando.SquadTracker.SquadPanel
 {
     public class Role
     {

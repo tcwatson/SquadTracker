@@ -2,10 +2,8 @@
 using Blish_HUD.Graphics.UI;
 using Microsoft.Xna.Framework;
 using System.Collections.ObjectModel;
-using Torlando.SquadTracker.Models;
-using Torlando.SquadTracker.Presenters;
 
-namespace Torlando.SquadTracker.Views
+namespace Torlando.SquadTracker.SquadPanel
 {
     class RoleSelectionView : View<RoleSelectionPresenter>
     {

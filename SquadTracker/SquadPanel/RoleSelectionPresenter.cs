@@ -1,9 +1,7 @@
 ﻿using Blish_HUD.Graphics.UI;
 using System.Collections.ObjectModel;
-using Torlando.SquadTracker.Models;
-using Torlando.SquadTracker.Views;
 
-namespace Torlando.SquadTracker.Presenters
+namespace Torlando.SquadTracker.SquadPanel
 {
     class RoleSelectionPresenter : Presenter<RoleSelectionView, ObservableCollection<Role>>
     {

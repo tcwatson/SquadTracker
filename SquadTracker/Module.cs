@@ -20,7 +20,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Torlando.SquadTracker.Models;
 using Torlando.SquadTracker.SquadPanel;
-using Torlando.SquadTracker.Views;
 
 namespace Torlando.SquadTracker
 {

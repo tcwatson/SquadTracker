@@ -5,7 +5,6 @@ using Blish_HUD.Settings;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Linq;
-using Torlando.SquadTracker.Models;
 
 namespace Torlando.SquadTracker.SquadPanel
 {

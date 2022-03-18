@@ -3,9 +3,6 @@ using Blish_HUD.Controls;
 using Blish_HUD.Graphics.UI;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
-using Torlando.SquadTracker.Models;
-using Torlando.SquadTracker.Player;
-using Torlando.SquadTracker.Views;
 
 namespace Torlando.SquadTracker.SquadPanel
 {

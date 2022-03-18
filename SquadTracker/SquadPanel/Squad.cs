@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Torlando.SquadTracker.Models;
 
 namespace Torlando.SquadTracker.SquadPanel
 {

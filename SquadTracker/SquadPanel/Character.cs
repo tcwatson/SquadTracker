@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace Torlando.SquadTracker.Models
+namespace Torlando.SquadTracker.SquadPanel
 {
     internal class Character : INotifyPropertyChanged
     {
