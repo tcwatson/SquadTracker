@@ -82,6 +82,11 @@ namespace Torlando.SquadTracker.SquadPanel
             Model.AddPlayer(player);
             View.SpawnPlayerButton(player, icon, roles);
         }
+
+        public void RemovePlayer()
+        {
+            View.RemovePlayerFromSquad("test.1234");
+        }
         #endregion
     }
 }

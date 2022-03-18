@@ -16,9 +16,11 @@ namespace Torlando.SquadTracker.SquadPanel
         private FlowPanel _squadMembersPanel;
         private FlowPanel _formerSquadMembersPanel;
         private StandardButton _clearFormerSquadButton;
+        private Dictionary<string, PlayerButton> _playerButtons = new Dictionary<string, PlayerButton>();
 
         #region Test
         private StandardButton _addPlayerButton;
+        private StandardButton _removeButton;
         #endregion
         #endregion
 
@@ -90,13 +92,31 @@ namespace Torlando.SquadTracker.SquadPanel
             {
                 Presenter.AddPlayer();
             };
+
+            _removeButton = new StandardButton
+            {
+                Parent = buildPanel,
+                Text = "Remove",
+                Location = new Point(_addPlayerButton.Location.X - 135, _squadMembersPanel.Top + 5)
+            };
+            _removeButton.Click += delegate
+            {
+                Presenter.RemovePlayer();
+            };
             #endregion
         }
 
         public void SpawnPlayerButton(PlayerModel playerModel, AsyncTexture2D icon, List<Role> roles)
         {
-            var button = new PlayerButton(_squadMembersPanel, playerModel, icon, roles);
-            
+            _playerButtons.Add(playerModel.AccountName, new PlayerButton(_squadMembersPanel, playerModel, icon, roles));
+        }
+
+        public void RemovePlayerFromSquad(string accountName)
+        {
+            if (_playerButtons.TryGetValue(accountName, out var button))
+            { 
+                button.Parent = _formerSquadMembersPanel;
+            }
         }
     }
 }
