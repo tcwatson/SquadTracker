@@ -1,7 +1,9 @@
-﻿using Blish_HUD.Controls;
+﻿using Blish_HUD.Content;
+using Blish_HUD.Controls;
 using Blish_HUD.Graphics.UI;
 using Microsoft.Xna.Framework;
 using Torlando.SquadTracker.Models;
+using Torlando.SquadTracker.Player;
 using Torlando.SquadTracker.Views;
 
 namespace Torlando.SquadTracker.SquadPanel
@@ -9,7 +11,7 @@ namespace Torlando.SquadTracker.SquadPanel
     internal class SquadPanelView : View<SquadPanelPresenter>
     {
         #region Controls
-        private Panel _menuPanel;
+        private ViewContainer _menuPanel;
         private Menu _menuCategories;
         private MenuItem _squadMembersMenu;
         private MenuItem _squadRolesMenu;
@@ -28,7 +30,7 @@ namespace Torlando.SquadTracker.SquadPanel
 
         protected override void Build(Container buildPanel)
         {
-            _menuPanel = new Panel
+            _menuPanel = new ViewContainer
             {
                 Title = "Squad Tracker Menu",
                 ShowBorder = true,
@@ -93,10 +95,10 @@ namespace Torlando.SquadTracker.SquadPanel
             #endregion
         }
 
-        public void SpawnPlayerView(PlayerModel playerModel)
+        public void SpawnPlayerButton(PlayerModel playerModel, AsyncTexture2D icon)
         {
-            var playerView = new PlayerView(playerModel);
-            playerView.SetPlayerText(playerModel.AccountName);
+            var button = new PlayerButton(_squadMembersPanel, playerModel, icon);
+            
         }
     }
 }

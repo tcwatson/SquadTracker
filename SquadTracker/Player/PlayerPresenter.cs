@@ -12,6 +12,13 @@ namespace Torlando.SquadTracker.Presenters
         {
         }
 
+        protected override void UpdateView()
+        {
+            SetPlayerName();
+            //SetPlayerIcon();
+            base.UpdateView();
+        }
+
         public void SetPlayerName()
         {
             View.SetPlayerText($"{Model.CharacterName} ({Model.AccountName})");

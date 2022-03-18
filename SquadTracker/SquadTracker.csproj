@@ -67,7 +67,8 @@
   <ItemGroup>
     <Compile Include="Helpers\IconHelper.cs" />
     <Compile Include="Player\Character.cs" />
-    <Compile Include="Player.cs" />
+    <Compile Include="OldPlayer.cs" />
+    <Compile Include="Player\PlayerButton.cs" />
     <Compile Include="Player\PlayerModel.cs" />
     <Compile Include="Role\Role.cs" />
     <Compile Include="SquadPanel\Squad.cs" />

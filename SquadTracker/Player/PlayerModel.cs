@@ -15,7 +15,7 @@ namespace Torlando.SquadTracker.Models
         public string AccountName { get; set; }
         //public bool IsSelf { get; private set; }
         public string CharacterName { get; set; }
-        public uint Profession { get; private set; }
+        public uint Profession { get; set; }
         public bool HasChangedCharacters => KnownCharacters?.Count > 1;
 
         public uint CurrentSpecialization

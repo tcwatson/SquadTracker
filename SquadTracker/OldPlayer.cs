@@ -5,9 +5,9 @@ using System.Runtime.CompilerServices;
 
 namespace Torlando.SquadTracker.Models
 {
-    internal class Player : INotifyPropertyChanged
+    internal class OldPlayer : INotifyPropertyChanged
     {
-        public Player(CommonFields.Player arcPlayer, Player previousCharacter = null) 
+        public OldPlayer(CommonFields.Player arcPlayer, OldPlayer previousCharacter = null) 
         {
             AccountName = arcPlayer.AccountName;
             IsSelf = arcPlayer.Self;
@@ -22,7 +22,7 @@ namespace Torlando.SquadTracker.Models
             }
             else
             {
-                PreviouslyPlayedCharacters = new HashSet<Player>();
+                PreviouslyPlayedCharacters = new HashSet<OldPlayer>();
             }
         }
 
@@ -31,7 +31,7 @@ namespace Torlando.SquadTracker.Models
         public string CharacterName { get; private set; }
         public uint Profession { get; private set; }
         public bool HasChangedCharacters => PreviouslyPlayedCharacters?.Count > 0;
-        public HashSet<Player> PreviouslyPlayedCharacters { get; set; }
+        public HashSet<OldPlayer> PreviouslyPlayedCharacters { get; set; }
 
         public uint CurrentSpecialization
         {

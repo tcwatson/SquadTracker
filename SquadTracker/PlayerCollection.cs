@@ -18,7 +18,7 @@ namespace Torlando.SquadTracker
     public class PlayerCollection
     {
         private ObservableCollection<PlayerDisplay> _playerDisplays;
-        private IDictionary<string, Player> _players;
+        private IDictionary<string, OldPlayer> _players;
         private ConcurrentDictionary<string, CommonFields.Player> _arcPlayersInSquad;
 
         private Panel _activePlayerPanel;
@@ -27,7 +27,7 @@ namespace Torlando.SquadTracker
         public PlayerCollection(ConcurrentDictionary<string, CommonFields.Player> arcPlayersInSquad, Panel activePlayerPanel, Panel formerPlayerPanel)
         {
             _playerDisplays = new ObservableCollection<PlayerDisplay>();
-            _players = new ConcurrentDictionary<string, Player>();
+            _players = new ConcurrentDictionary<string, OldPlayer>();
             _arcPlayersInSquad = arcPlayersInSquad;
             _activePlayerPanel = activePlayerPanel;
             _formerPlayerPanel = formerPlayerPanel;
@@ -46,7 +46,7 @@ namespace Torlando.SquadTracker
                 }
                 if (arcPlayer.CharacterName != existingPlayer.CharacterName)
                 {
-                    var newCharacter = new Player(arcPlayer, existingPlayer);
+                    var newCharacter = new OldPlayer(arcPlayer, existingPlayer);
                     playerDisplay.UpdateCharacter(newCharacter);
                     _players[arcPlayer.AccountName] = newCharacter;
                 }
@@ -55,7 +55,7 @@ namespace Torlando.SquadTracker
 
             }
 
-            var player = new Player(arcPlayer);
+            var player = new OldPlayer(arcPlayer);
             _players.Add(player.AccountName, player);
             _playerDisplays.Add(new PlayerDisplay(_activePlayerPanel, _formerPlayerPanel, player, iconGetter, availableRoles));
         }
@@ -126,7 +126,7 @@ namespace Torlando.SquadTracker
     internal class PlayerDisplay
     {
         #region Data
-        private Player _player;
+        private OldPlayer _player;
         private ObservableCollection<Role> _availableRoles;
         #endregion
 
@@ -148,7 +148,7 @@ namespace Torlando.SquadTracker
         public bool IsSelf => _player.IsSelf;
         public string AccountName => _player.AccountName;
         public PlayerDisplay(Panel activePlayerPanel,
-            Panel formerPlayerPanel, Player player, Func<uint, uint, AsyncTexture2D> iconGetter, ObservableCollection<Role> availableRoles)
+            Panel formerPlayerPanel, OldPlayer player, Func<uint, uint, AsyncTexture2D> iconGetter, ObservableCollection<Role> availableRoles)
         {
             _activePlayerPanel = activePlayerPanel;
             _formerPlayerPanel = formerPlayerPanel;
@@ -186,7 +186,7 @@ namespace Torlando.SquadTracker
         /// <summary>
         /// Updates the text on the DetailsButton for the PlayerDisplay when a player changes characters
         /// </summary>
-        public void UpdateCharacter(Player player)
+        public void UpdateCharacter(OldPlayer player)
         {
             _player = player;
             UpdateDetailsButtonWithNewCharacter();
@@ -225,7 +225,7 @@ namespace Torlando.SquadTracker
 
         private void UpdateDetailsButton(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName != nameof(Player.CurrentSpecialization)) return;
+            if (e.PropertyName != nameof(OldPlayer.CurrentSpecialization)) return;
             if (IsFormerSquadMember) return;
             if (_player.Profession == 0) return;
             _detailsButton.Icon = _iconGetter(_player.Profession, _player.CurrentSpecialization);

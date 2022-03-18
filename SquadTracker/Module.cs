@@ -42,8 +42,8 @@ namespace Torlando.SquadTracker
 
         #region Textures
 
-        private IReadOnlyDictionary<uint, Texture2D> _professionIcons;
-        private IReadOnlyDictionary<uint, Texture2D> _specializationIcons;
+        private IReadOnlyDictionary<uint, Texture2D> _professionIcons; //todo: remove after refactor
+        private IReadOnlyDictionary<uint, Texture2D> _specializationIcons; //todo: remove after refactor
 
         #endregion
 
@@ -68,7 +68,7 @@ namespace Torlando.SquadTracker
         private PlayerCollection _playerCollection;
 
         private ConcurrentDictionary<string, CommonFields.Player> _arcPlayers;
-        private SettingEntry<bool> _areColorIconsEnabled;
+        private SettingEntry<bool> _areColorIconsEnabled; //todo: remove after refactor
 
         [ImportingConstructor]
         public Module([Import("ModuleParameters")] ModuleParameters moduleParameters) : base(moduleParameters) { }
@@ -112,7 +112,7 @@ namespace Torlando.SquadTracker
             await LoadRoles();
         }
 
-        private void LoadSpecializationIcons()
+        private void LoadSpecializationIcons() //todo: remove after refactor
         {
             bool useTangoIcons = _areColorIconsEnabled.Value;
 
@@ -178,7 +178,7 @@ namespace Torlando.SquadTracker
                 icon: ContentsManager.GetTexture(@"textures\commandertag.png"),
                 viewFunc: () => {
                     var view = new SquadPanelView();
-                    var presenter = new SquadPanelPresenter(view, new Squad(), ContentsManager);
+                    var presenter = new SquadPanelPresenter(view, new Squad(), ContentsManager, _areColorIconsEnabled);
                     return view.WithPresenter(presenter);
                 },
                 name: "Squad Tracker Tab"

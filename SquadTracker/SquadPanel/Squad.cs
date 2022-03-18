@@ -8,6 +8,7 @@ namespace Torlando.SquadTracker.SquadPanel
         public ICollection<PlayerModel> CurrentSquadMembers { get; } = new HashSet<PlayerModel>();
         public IReadOnlyCollection<PlayerModel> FormerSquadMembers { get; private set; } = new HashSet<PlayerModel>();
 
+
         public ICollection<Role> FilledRoles { get; } = new List<Role>();
 
         public void ClearFormerSquadMembers()
