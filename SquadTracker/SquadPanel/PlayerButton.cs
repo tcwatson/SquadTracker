@@ -30,6 +30,12 @@ namespace Torlando.SquadTracker.SquadPanel
             Role2Dropdown = CreateDropdown(availableRoles, _roleIcon2);
         }
 
+        //ToDo - KnownCharacters
+        public void UpdateToolTip(string text)
+        {
+            Tooltip.BasicTooltipText = text;
+        }
+
         private Dropdown CreateDropdown(List<Role> roles, Image roleIcon)
         {
             roleIcon.Parent = this;
