@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using Torlando.SquadTracker.Models;
+using Torlando.SquadTracker.SquadPanel;
 
 namespace Torlando.SquadTracker
 {
