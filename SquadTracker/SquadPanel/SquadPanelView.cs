@@ -2,6 +2,7 @@
 using Blish_HUD.Controls;
 using Blish_HUD.Graphics.UI;
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 using Torlando.SquadTracker.Models;
 using Torlando.SquadTracker.Player;
 using Torlando.SquadTracker.Views;
@@ -95,9 +96,9 @@ namespace Torlando.SquadTracker.SquadPanel
             #endregion
         }
 
-        public void SpawnPlayerButton(PlayerModel playerModel, AsyncTexture2D icon)
+        public void SpawnPlayerButton(PlayerModel playerModel, AsyncTexture2D icon, List<Role> roles)
         {
-            var button = new PlayerButton(_squadMembersPanel, playerModel, icon);
+            var button = new PlayerButton(_squadMembersPanel, playerModel, icon, roles);
             
         }
     }

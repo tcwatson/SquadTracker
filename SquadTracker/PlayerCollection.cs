@@ -139,7 +139,7 @@ namespace Torlando.SquadTracker
         private Panel _activePlayerPanel;
         private Panel _formerPlayerPanel;
         private Func<uint, uint, AsyncTexture2D> _iconGetter;
-        private const string _placeholderRoleName = "Select a role...";
+        private const string _placeholderRoleName = "Select a role..."; //todo: remove after refactor
         #endregion
 
         public string CharacterName => _player.CharacterName;
@@ -238,7 +238,7 @@ namespace Torlando.SquadTracker
             _detailsButton.BasicTooltipText = GetPreviousCharactersToolTipText();
         }
 
-        private Dropdown CreateDropdown(Image roleIcon)
+        private Dropdown CreateDropdown(Image roleIcon) //todo: remove after refactor
         {
             var dropdown = new Dropdown
             {

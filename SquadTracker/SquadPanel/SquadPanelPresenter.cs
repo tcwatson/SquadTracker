@@ -67,6 +67,11 @@ namespace Torlando.SquadTracker.SquadPanel
         #region Test
         public void AddPlayer()
         {
+            var roles = new List<Role>
+            {
+                new Role("alac", @"icons\alacrity.png", _contentsManager),
+                new Role("quick", @"icons\quickness.png", _contentsManager)
+            };
             var player = new PlayerModel
             {
                 AccountName = "test.1234",
@@ -76,7 +81,7 @@ namespace Torlando.SquadTracker.SquadPanel
             };
             var icon = GetSpecializationIcon(player.Profession, player.CurrentSpecialization);
             Model.AddPlayer(player);
-            View.SpawnPlayerButton(player, icon);
+            View.SpawnPlayerButton(player, icon, roles);
         }
         #endregion
     }
