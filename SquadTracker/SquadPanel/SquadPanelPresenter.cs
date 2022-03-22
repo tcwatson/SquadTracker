@@ -68,8 +68,8 @@ namespace Torlando.SquadTracker.SquadPanel
         {
             var roles = new List<Role>
             {
-                new Role("alac", @"icons\alacrity.png", _contentsManager),
-                new Role("quick", @"icons\quickness.png", _contentsManager)
+                new Role("alac", @"icons\alacrity.png", _contentsManager.GetTexture(@"icons\alacrity.png")),
+                new Role("quick", @"icons\quickness.png", _contentsManager.GetTexture(@"icons\quickness.png"))
             };
             var player = new PlayerModel
             {

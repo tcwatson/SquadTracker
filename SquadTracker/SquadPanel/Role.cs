@@ -1,5 +1,6 @@
 ﻿using Blish_HUD.Modules.Managers;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Text.Json.Serialization;
 
 namespace Torlando.SquadTracker.SquadPanel
@@ -10,6 +11,7 @@ namespace Torlando.SquadTracker.SquadPanel
 
         [JsonIgnore]
         public Texture2D Icon { get; set; }
+
         public string IconPath { get; set; } = string.Empty;
 
         [JsonConstructor]
@@ -20,11 +22,11 @@ namespace Torlando.SquadTracker.SquadPanel
 
         public Role() { }
 
-        public Role(string name, string iconPath, ContentsManager contentsManager)
+        public Role(string name, string iconPath, Texture2D icon)
         {
             Name = name;
             IconPath = iconPath;
-            Icon = contentsManager.GetTexture(IconPath);
+            Icon = icon;
         }
     }
 }
