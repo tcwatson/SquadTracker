@@ -10,16 +10,41 @@ namespace Torlando.SquadTracker.SquadPanel
     {
         public Dropdown Role1Dropdown { get; set; }
         public Dropdown Role2Dropdown { get; set; }
+        public string CharacterName 
+        { 
+            get 
+            { 
+                return _characterName; 
+            } 
+            set 
+            {
+                _characterName = value;
+                Text = $"{CharacterName} ({AccountName})";
+            } 
+        }
+        private string _characterName;
+        public string AccountName 
+        { 
+            get 
+            { 
+                return _accountName; 
+            }
+            set
+            {
+                _accountName = value;
+                Text = $"{CharacterName} ({AccountName})";
+            } 
+        }
+        private string _accountName;
 
         private Image _roleIcon1 = new Image { Size = new Point(27, 27) };
         private Image _roleIcon2 = new Image { Size = new Point(27, 27) };
 
         private const string _placeholderRoleName = "Select a role...";
 
-        public PlayerButton(Container container, PlayerModel player, AsyncTexture2D icon, List<Role> availableRoles) : base()
+        public PlayerButton(Container container, AsyncTexture2D icon, List<Role> availableRoles) : base()
         {
             Parent = container;
-            Text = $"{player.CharacterName} ({player.AccountName})";
             IconSize = DetailsIconSize.Small;
             ShowVignette = true;
             HighlightType = DetailsHighlightType.LightHighlight;

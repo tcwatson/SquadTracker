@@ -108,7 +108,11 @@ namespace Torlando.SquadTracker.SquadPanel
 
         public void SpawnPlayerButton(PlayerModel playerModel, AsyncTexture2D icon, List<Role> roles)
         {
-            _playerButtons.Add(playerModel.AccountName, new PlayerButton(_squadMembersPanel, playerModel, icon, roles));
+            _playerButtons.Add(playerModel.AccountName, new PlayerButton(_squadMembersPanel, icon, roles) 
+            { 
+                AccountName = playerModel.AccountName, 
+                CharacterName = playerModel.CharacterName
+            });
         }
 
         public void RemovePlayerFromSquad(string accountName)
