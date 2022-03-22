@@ -1,6 +1,4 @@
-﻿using Blish_HUD.Modules.Managers;
-using Microsoft.Xna.Framework.Graphics;
-using System;
+﻿using Microsoft.Xna.Framework.Graphics;
 using System.Text.Json.Serialization;
 
 namespace Torlando.SquadTracker.SquadPanel
