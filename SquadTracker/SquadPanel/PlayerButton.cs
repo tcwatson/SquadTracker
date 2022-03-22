@@ -42,13 +42,12 @@ namespace Torlando.SquadTracker.SquadPanel
 
         private const string _placeholderRoleName = "Select a role...";
 
-        public PlayerButton(AsyncTexture2D icon, List<Role> availableRoles) : base()
+        public PlayerButton(List<Role> availableRoles) : base()
         {
             IconSize = DetailsIconSize.Small;
             ShowVignette = true;
             HighlightType = DetailsHighlightType.LightHighlight;
             ShowToggleButton = true;
-            Icon = icon;
             Size = new Point(354, 90);
             Role1Dropdown = CreateDropdown(availableRoles, _roleIcon1);
             Role2Dropdown = CreateDropdown(availableRoles, _roleIcon2);
