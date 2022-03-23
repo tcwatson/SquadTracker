@@ -9,10 +9,7 @@ namespace Torlando.SquadTracker.SquadPanel
     internal class SquadPanelView : View<SquadPanelPresenter>
     {
         #region Controls
-        private ViewContainer _menuPanel;
-        private Menu _menuCategories;
-        private MenuItem _squadMembersMenu;
-        private MenuItem _squadRolesMenu;
+        
         private FlowPanel _squadMembersPanel;
         private FlowPanel _formerSquadMembersPanel;
         private StandardButton _clearFormerSquadButton;
@@ -30,32 +27,14 @@ namespace Torlando.SquadTracker.SquadPanel
 
         protected override void Build(Container buildPanel)
         {
-            _menuPanel = new ViewContainer
-            {
-                Title = "Squad Tracker Menu",
-                ShowBorder = true,
-                Size = Panel.MenuStandard.Size,
-                Parent = buildPanel
-            };
-            _menuCategories = new Menu
-            {
-                Size = _menuPanel.ContentRegion.Size,
-                MenuItemHeight = 40,
-                Parent = _menuPanel,
-                CanSelect = true
-            };
-            _squadMembersMenu = _menuCategories.AddMenuItem("Squad Members");
-            _squadMembersMenu.Select();
-
-            _squadRolesMenu = _menuCategories.AddMenuItem("Squad Roles");
             _squadMembersPanel = new FlowPanel
             {
                 FlowDirection = ControlFlowDirection.LeftToRight,
                 ControlPadding = new Vector2(8, 8),
                 Parent = buildPanel,
-                Location = new Point(_menuCategories.Right + 10, _menuCategories.Top),
+                Location = new Point(buildPanel.ContentRegion.Left, buildPanel.ContentRegion.Top),
                 CanScroll = true,
-                Size = new Point(buildPanel.Width - _menuCategories.Width - 5, 530), //
+                Size = new Point(buildPanel.ContentRegion.Width - Panel.MenuStandard.Size.X - 5, 530), //
                 Title = "Current Squad Members",
                 ShowBorder = true
             };
@@ -64,9 +43,9 @@ namespace Torlando.SquadTracker.SquadPanel
                 FlowDirection = ControlFlowDirection.LeftToRight,
                 ControlPadding = new Vector2(8, 8),
                 Parent = buildPanel,
-                Location = new Point(_menuCategories.Right + 10, _squadMembersPanel.Bottom + 10),
+                Location = new Point(buildPanel.ContentRegion.Left, _squadMembersPanel.Bottom + 10),
                 CanScroll = true,
-                Size = new Point(buildPanel.Width - _menuCategories.Width - 5, 150),
+                Size = new Point(buildPanel.ContentRegion.Width - Panel.MenuStandard.Size.X - 5, 150),
                 Title = "Former Squad Members",
                 ShowBorder = true
             };
@@ -86,7 +65,7 @@ namespace Torlando.SquadTracker.SquadPanel
             {
                 Parent = buildPanel,
                 Text = "Add Player",
-                Location = new Point(_squadMembersPanel.Right - 135, _squadMembersPanel.Top + 5)
+                Location = new Point(_squadMembersPanel.ContentRegion.Right - 135, _squadMembersPanel.Top + 5)
             };
             _addPlayerButton.Click += delegate
             {
