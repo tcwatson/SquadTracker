@@ -12,6 +12,7 @@ namespace Torlando.SquadTracker.SquadPanel
     {
         private readonly ContentsManager _contentsManager;
         private SettingEntry<bool> _areColorIconsEnabled;
+        private readonly IEnumerable<Role> _roles;
 
         #region Textures
 
@@ -24,11 +25,13 @@ namespace Torlando.SquadTracker.SquadPanel
             SquadPanelView view, 
             Squad model, 
             ContentsManager contentsManager,
-            SettingEntry<bool> areColorIconsEnabled
+            SettingEntry<bool> areColorIconsEnabled,
+            IEnumerable<Role> roles
         ) : base (view, model) 
         {
             _contentsManager = contentsManager;
             _areColorIconsEnabled = areColorIconsEnabled;
+            _roles = roles;
 
             LoadSpecializationIcons();
         }
@@ -66,11 +69,6 @@ namespace Torlando.SquadTracker.SquadPanel
         #region Test
         public void AddPlayer()
         {
-            var roles = new List<Role>
-            {
-                new Role("alac", @"icons\alacrity.png", _contentsManager.GetTexture(@"icons\alacrity.png")),
-                new Role("quick", @"icons\quickness.png", _contentsManager.GetTexture(@"icons\quickness.png"))
-            };
             var player = new PlayerModel
             {
                 AccountName = "test.1234",
@@ -80,7 +78,7 @@ namespace Torlando.SquadTracker.SquadPanel
             };
             var icon = GetSpecializationIcon(player.Profession, player.CurrentSpecialization);
             Model.AddPlayer(player);
-            View.SpawnPlayerButton(player, icon, roles);
+            View.SpawnPlayerButton(player, icon, _roles);
         }
 
         public void RemovePlayer()

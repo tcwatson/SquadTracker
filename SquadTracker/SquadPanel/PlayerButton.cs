@@ -42,7 +42,7 @@ namespace Torlando.SquadTracker.SquadPanel
 
         private const string _placeholderRoleName = "Select a role...";
 
-        public PlayerButton(List<Role> availableRoles) : base()
+        public PlayerButton(IEnumerable<Role> availableRoles) : base()
         {
             IconSize = DetailsIconSize.Small;
             ShowVignette = true;
@@ -59,7 +59,7 @@ namespace Torlando.SquadTracker.SquadPanel
             Tooltip.BasicTooltipText = text;
         }
 
-        private Dropdown CreateDropdown(List<Role> roles, Image roleIcon)
+        private Dropdown CreateDropdown(IEnumerable<Role> roles, Image roleIcon)
         {
             roleIcon.Parent = this;
             var dropdown = new Dropdown
