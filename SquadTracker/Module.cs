@@ -52,7 +52,6 @@ namespace Torlando.SquadTracker
         private Panel _tabPanel;
         private FlowPanel _squadMembersPanel;
         private FlowPanel _formerSquadMembersPanel;
-        private RolesPanel _rolesPanel;
         private MenuItem _squadMembersMenu;
         private MenuItem _squadRolesMenu;
         private MenuItem _settingsMenu;
@@ -226,17 +225,13 @@ namespace Torlando.SquadTracker
             };
             SetupMenu(panel);
 
-            _rolesPanel = new RolesPanel(panel, _customRoles, marginLeft: _menu.Width + 10);
-
             _squadMembersMenu.Click += delegate { 
                 _squadMembersPanel.Visible = true;
                 _formerSquadMembersPanel.Visible = true;
-                _rolesPanel.MainPanel.Visible = false;
                 _clearFormerSquadButton.Visible = true;
             };
             _squadRolesMenu.Click += delegate { 
                 _squadMembersPanel.Visible = false;
-                _rolesPanel.MainPanel.Visible = true;
                 _formerSquadMembersPanel.Visible = false;
                 _clearFormerSquadButton.Visible = false;
             };
