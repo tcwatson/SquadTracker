@@ -42,8 +42,8 @@ namespace Torlando.SquadTracker.MainScreen
             _viewContainer = new ViewContainer
             {
                 Parent = buildPanel,
-                Location = new Point(_menuCategories.Right, _menuCategories.Top),
-                Width = buildPanel.ContentRegion.Width,
+                Location = new Point(_menuCategories.Right + 10, _menuCategories.Top),
+                Width = buildPanel.ContentRegion.Width - _menuPanel.Width - 10,
                 Height = buildPanel.ContentRegion.Height
             };
             _squadMembersMenu = _menuCategories.AddMenuItem("Squad Members");

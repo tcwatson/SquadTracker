@@ -34,7 +34,7 @@ namespace Torlando.SquadTracker.SquadPanel
                 Parent = buildPanel,
                 Location = new Point(buildPanel.ContentRegion.Left, buildPanel.ContentRegion.Top),
                 CanScroll = true,
-                Size = new Point(buildPanel.ContentRegion.Width - Panel.MenuStandard.Size.X - 5, 530), //
+                Size = new Point(buildPanel.ContentRegion.Width, 530), //
                 Title = "Current Squad Members",
                 ShowBorder = true
             };
@@ -45,7 +45,7 @@ namespace Torlando.SquadTracker.SquadPanel
                 Parent = buildPanel,
                 Location = new Point(buildPanel.ContentRegion.Left, _squadMembersPanel.Bottom + 10),
                 CanScroll = true,
-                Size = new Point(buildPanel.ContentRegion.Width - Panel.MenuStandard.Size.X - 5, 150),
+                Size = new Point(_squadMembersPanel.Width, 150),
                 Title = "Former Squad Members",
                 ShowBorder = true
             };
