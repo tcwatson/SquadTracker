@@ -19,7 +19,7 @@ namespace Torlando.SquadTracker.MainScreen
         public MainScreenPresenter(MainScreenView view, ContentsManager contentsManager, SettingEntry<bool> areColorIconsEnabled, ICollection<Role> roles) : base (view, 0)
         {
             _squadPanelView = new SquadPanelView();
-            _squadPanelPresenter = new SquadPanelPresenter(_squadPanelView, new Squad(), contentsManager, areColorIconsEnabled);
+            _squadPanelPresenter = new SquadPanelPresenter(_squadPanelView, new Squad(), contentsManager, areColorIconsEnabled, roles);
 
             _rolesView = new RolesView();
             _rolesPresenter = new RolesPresenter(_rolesView, roles);
