@@ -20,6 +20,13 @@ namespace Torlando.SquadTracker
             _contentsManager = contentsManager;
             _areColorIconsEnabled = areColorIconsEnabled;
 
+            this.Initialize();
+
+            _areColorIconsEnabled.SettingChanged += (o, e) => this.Initialize();
+        }
+
+        private void Initialize()
+        {
             var useColoredIcons = _areColorIconsEnabled.Value;
 
             _professionIcons = Specialization.ProfessionCodes.ToDictionary(
