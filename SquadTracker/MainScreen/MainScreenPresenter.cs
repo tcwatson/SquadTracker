@@ -9,31 +9,39 @@ namespace Torlando.SquadTracker.MainScreen
 {
     internal class MainScreenPresenter : Presenter<MainScreenView, int>
     {
-
-        private SquadPanelPresenter _squadPanelPresenter;
-        private SquadPanelView _squadPanelView;
-
-        private RolesPresenter _rolesPresenter;
-        private RolesView _rolesView;
+        private readonly ContentsManager _contentsManager;
+        private readonly SettingEntry<bool> _areColorIconsEnabled;
+        private readonly ICollection<Role> _roles;
 
         public MainScreenPresenter(MainScreenView view, ContentsManager contentsManager, SettingEntry<bool> areColorIconsEnabled, ICollection<Role> roles) : base (view, 0)
         {
-            _squadPanelView = new SquadPanelView();
-            _squadPanelPresenter = new SquadPanelPresenter(_squadPanelView, new Squad(), contentsManager, areColorIconsEnabled, roles);
-
-            _rolesView = new RolesView();
-            _rolesPresenter = new RolesPresenter(_rolesView, roles);
+            _contentsManager = contentsManager;
+            _areColorIconsEnabled = areColorIconsEnabled;
+            _roles = roles;
         }
 
         public IView SelectView(string name)
         {
             return name switch
             {
-                "Squad Members" => _squadPanelView.WithPresenter(_squadPanelPresenter),
-                "Squad Roles" => _rolesView.WithPresenter(_rolesPresenter),
-                _ => _squadPanelView.WithPresenter(_squadPanelPresenter),
+                "Squad Members" => this.CreateSquadView(),
+                "Squad Roles" => this.CreateRolesView(),
+                _ => this.CreateSquadView(),
             };
         }
-        
+
+        private IView CreateSquadView()
+        {
+            var view = new SquadPanelView();
+            var presenter = new SquadPanelPresenter(view, new Squad(), _contentsManager, _areColorIconsEnabled, _roles);
+            return view.WithPresenter(presenter);
+        }
+
+        private IView CreateRolesView()
+        {
+            var view = new RolesView();
+            var presenter = new RolesPresenter(view, _roles);
+            return view.WithPresenter(presenter);
+        }
     }
 }
