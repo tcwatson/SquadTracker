@@ -14,7 +14,6 @@ namespace Torlando.SquadTracker
 
         private IReadOnlyDictionary<uint, Texture2D> _professionIcons;
         private IReadOnlyDictionary<uint, Texture2D> _specializationIcons;
-        
 
         public PlayerIconsManager(ContentsManager contentsManager, SettingEntry<bool> areColorIconsEnabled)
         {

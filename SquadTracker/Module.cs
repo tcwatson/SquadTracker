@@ -196,6 +196,10 @@ namespace Torlando.SquadTracker
 
             // Base handler must be called
             base.OnModuleLoaded(e);
+
+#if DEBUG
+            GameService.Overlay.BlishHudWindow.Show();
+#endif
         }
 
         private void PlayerAddedEvent(CommonFields.Player player)
