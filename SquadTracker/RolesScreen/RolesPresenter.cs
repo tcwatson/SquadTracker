@@ -20,14 +20,6 @@ namespace Torlando.SquadTracker.RolesScreen
             }
         }
 
-        protected override void Unload()
-        {
-            foreach (var role in _roles)
-            {
-                this.View.RemoveRoleDisplay(role.Name);
-            }
-        }
-
         public void CreateRole(string roleName)
         {
             var newRoleName = roleName.Trim();

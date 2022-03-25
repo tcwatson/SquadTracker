@@ -31,6 +31,7 @@ namespace Torlando.SquadTracker
 
         private static readonly Logger Logger = Logger.GetLogger<Module>();
 
+        private PlayerIconsManager _playerIconsManager;
         private ObservableCollection<Role> _customRoles;
 
         #region Service Managers
@@ -109,6 +110,7 @@ namespace Torlando.SquadTracker
         {
             LoadSpecializationIcons();
             await LoadRoles();
+            _playerIconsManager = new PlayerIconsManager(this.ContentsManager, _areColorIconsEnabled);
         }
 
         private void LoadSpecializationIcons() //todo: remove after refactor
@@ -177,7 +179,7 @@ namespace Torlando.SquadTracker
                 icon: ContentsManager.GetTexture(@"textures\commandertag.png"),
                 viewFunc: () => {
                     var view = new MainScreenView();
-                    var presenter = new MainScreenPresenter(view, ContentsManager, _areColorIconsEnabled, _customRoles);
+                    var presenter = new MainScreenPresenter(view, _playerIconsManager, _customRoles);
                     return view.WithPresenter(presenter);
                 },
                 name: "Squad Tracker Tab"
@@ -194,6 +196,10 @@ namespace Torlando.SquadTracker
 
             // Base handler must be called
             base.OnModuleLoaded(e);
+
+#if DEBUG
+            GameService.Overlay.BlishHudWindow.Show();
+#endif
         }
 
         private void PlayerAddedEvent(CommonFields.Player player)
