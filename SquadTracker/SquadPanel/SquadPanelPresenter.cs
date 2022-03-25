@@ -1,69 +1,27 @@
-﻿using Blish_HUD.Content;
-using Blish_HUD.Graphics.UI;
-using Blish_HUD.Modules.Managers;
-using Blish_HUD.Settings;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Blish_HUD.Graphics.UI;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Torlando.SquadTracker.SquadPanel
 {
     internal class SquadPanelPresenter : Presenter<SquadPanelView, Squad>
     {
-        private readonly ContentsManager _contentsManager;
-        private SettingEntry<bool> _areColorIconsEnabled;
+        private readonly PlayerIconsManager _iconsManager;
         private readonly IEnumerable<Role> _roles;
-
-        #region Textures
-
-        private IReadOnlyDictionary<uint, Texture2D> _professionIcons;
-        private IReadOnlyDictionary<uint, Texture2D> _specializationIcons;
-
-        #endregion
 
         public SquadPanelPresenter(
             SquadPanelView view, 
             Squad model, 
-            ContentsManager contentsManager,
-            SettingEntry<bool> areColorIconsEnabled,
+            PlayerIconsManager iconsManager,
             IEnumerable<Role> roles
         ) : base (view, model) 
         {
-            _contentsManager = contentsManager;
-            _areColorIconsEnabled = areColorIconsEnabled;
+            _iconsManager = iconsManager;
             _roles = roles;
-
-            LoadSpecializationIcons();
         }
         
         public void ClearFormerSquadMembers()
         {
             Model.ClearFormerSquadMembers();
-        }
-
-        private AsyncTexture2D GetSpecializationIcon(uint professionCode, uint specializationCode)
-        {
-            if (specializationCode == 0)
-            {
-                return _professionIcons[professionCode];
-            }
-
-            return _specializationIcons[specializationCode];
-        }
-
-        private void LoadSpecializationIcons()
-        {
-            bool useTangoIcons = _areColorIconsEnabled.Value;
-
-            _professionIcons = Specialization.ProfessionCodes.ToDictionary(
-                keySelector: (profession) => profession,
-                (profession) => _contentsManager.GetTexture(Specialization.GetCoreIconPath(profession, useTangoIcons))
-            );
-
-            _specializationIcons = Specialization.EliteCodes.ToDictionary(
-                keySelector: (spec) => spec,
-                (spec) => _contentsManager.GetTexture(Specialization.GetEliteIconPath(spec, useTangoIcons))
-            );
         }
 
         #region Test
@@ -76,7 +34,7 @@ namespace Torlando.SquadTracker.SquadPanel
                 Profession = 2,
                 CurrentSpecialization = 18
             };
-            var icon = GetSpecializationIcon(player.Profession, player.CurrentSpecialization);
+            var icon = _iconsManager.GetSpecializationIcon(player.Profession, player.CurrentSpecialization);
             Model.AddPlayer(player);
             View.SpawnPlayerButton(player, icon, _roles);
         }
