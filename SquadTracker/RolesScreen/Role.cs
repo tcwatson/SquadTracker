@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
 
-namespace Torlando.SquadTracker.SquadPanel
+namespace Torlando.SquadTracker.RolesScreen
 {
     public class Role
     {

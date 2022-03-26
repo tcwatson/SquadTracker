@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Torlando.SquadTracker
+namespace Torlando.SquadTracker.SquadPanel
 {
     internal class Squad
     {
@@ -11,7 +11,7 @@ namespace Torlando.SquadTracker
 
         public void ClearFormerMembers()
         {
-            this.FormerMembers = new HashSet<Player>();
+            FormerMembers = new HashSet<Player>();
         }
     }
 }

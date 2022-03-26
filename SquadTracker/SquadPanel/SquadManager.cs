@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace Torlando.SquadTracker
+namespace Torlando.SquadTracker.SquadPanel
 {
     class SquadManager
     {
@@ -46,7 +46,7 @@ namespace Torlando.SquadTracker
                 _squad.FormerMembers.Remove(newPlayer);
             }
 
-            this.PlayerJoinedSquad?.Invoke(newPlayer, isReturning);
+            PlayerJoinedSquad?.Invoke(newPlayer, isReturning);
         }
 
         private void OnPlayerLeftInstance(string accountName)
@@ -57,7 +57,7 @@ namespace Torlando.SquadTracker
             _squad.CurrentMembers.Remove(player);
             _squad.FormerMembers.Add(player);
 
-            this.PlayerLeftSquad?.Invoke(accountName);
+            PlayerLeftSquad?.Invoke(accountName);
         }
     }
 }

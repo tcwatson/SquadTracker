@@ -20,6 +20,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Torlando.SquadTracker.MainScreen;
 using Torlando.SquadTracker.Models;
+using Torlando.SquadTracker.RolesScreen;
 using Torlando.SquadTracker.SquadPanel;
 
 namespace Torlando.SquadTracker
@@ -194,9 +195,9 @@ namespace Torlando.SquadTracker
 
 
             GameService.ArcDps.Common.Activate();
-            GameService.ArcDps.Common.PlayerAdded += PlayerAddedEvent;
-            GameService.ArcDps.Common.PlayerRemoved += PlayerRemovedEvent;
-            GameService.ArcDps.RawCombatEvent += RawCombatEvent;
+            //GameService.ArcDps.Common.PlayerAdded += PlayerAddedEvent;
+            //GameService.ArcDps.Common.PlayerRemoved += PlayerRemovedEvent;
+            //GameService.ArcDps.RawCombatEvent += RawCombatEvent;
             _playerCollection = new PlayerCollection(_arcPlayers, _squadMembersPanel, _formerSquadMembersPanel);
 
             // Base handler must be called

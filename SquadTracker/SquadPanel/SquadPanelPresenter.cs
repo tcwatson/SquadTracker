@@ -1,6 +1,7 @@
 ﻿using Blish_HUD.Graphics.UI;
 using System.Linq;
 using System.Collections.Generic;
+using Torlando.SquadTracker.RolesScreen;
 
 namespace Torlando.SquadTracker.SquadPanel
 {
