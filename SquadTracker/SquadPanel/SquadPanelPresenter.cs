@@ -32,6 +32,7 @@ namespace Torlando.SquadTracker.SquadPanel
             }
 
             _playersManager.PlayerJoinedInstance += AddPlayer;
+            _playersManager.CharacterChangedSpecialization += ChangeCharacterSpecialization;
             _playersManager.PlayerLeftInstance += RemovePlayer;
         }
 
@@ -39,6 +40,7 @@ namespace Torlando.SquadTracker.SquadPanel
         {
             // To allow for garbage collection.
             _playersManager.PlayerJoinedInstance -= AddPlayer;
+            _playersManager.CharacterChangedSpecialization -= ChangeCharacterSpecialization;
             _playersManager.PlayerLeftInstance -= RemovePlayer;
         }
 
@@ -60,6 +62,12 @@ namespace Torlando.SquadTracker.SquadPanel
 
                 View.DisplayPlayer(player, icon, _roles);
             }
+        }
+
+        private void ChangeCharacterSpecialization(Character character)
+        {
+            var icon = _iconsManager.GetSpecializationIcon(character.Profession, character.Specialization);
+            View.SetPlayerIcon(character.Player, icon);
         }
 
         private void RemovePlayer(string accountName)

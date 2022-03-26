@@ -100,6 +100,12 @@ namespace Torlando.SquadTracker.SquadPanel
             });
         }
 
+        public void SetPlayerIcon(Player playerModel, AsyncTexture2D icon)
+        {
+            if (!_playerButtons.TryGetValue(playerModel.AccountName, out var button)) return;
+            button.Icon = icon;
+        }
+
         public void MovePlayerToFormerMembers(string accountName)
         {
             if (_playerButtons.TryGetValue(accountName, out var button))

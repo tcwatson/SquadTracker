@@ -12,6 +12,7 @@
         public string Name { get; }
         public uint Profession { get; }
         public uint Specialization { get; set; } = default;
+        public Player Player { get; set; }
 
         // Needed to use HashSets efficiently.
         public override int GetHashCode()

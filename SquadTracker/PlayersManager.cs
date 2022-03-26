@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Blish_HUD;
+using Blish_HUD.ArcDps;
 using Blish_HUD.ArcDps.Common;
 
 namespace Torlando.SquadTracker
@@ -9,9 +10,11 @@ namespace Torlando.SquadTracker
     {
         public delegate void PlayerJoinedInstanceHandler(Player newPlayer);
         public delegate void PlayerLeftInstanceHandler(string accountName);
+        public delegate void CharacterChangedSpecializationHandler(Character character);
 
         public event PlayerJoinedInstanceHandler PlayerJoinedInstance;
         public event PlayerLeftInstanceHandler PlayerLeftInstance;
+        public event CharacterChangedSpecializationHandler CharacterChangedSpecialization;
 
         private readonly ArcDpsService _arcDpsService;
 
@@ -23,6 +26,7 @@ namespace Torlando.SquadTracker
             _arcDpsService = arcDpsService;
 
             _arcDpsService.Common.PlayerAdded += OnPlayerJoinedInstance;
+            _arcDpsService.RawCombatEvent += OnSomeoneDidSomething;
             _arcDpsService.Common.PlayerRemoved += OnPlayerLeftInstance;
         }
 
@@ -55,6 +59,26 @@ namespace Torlando.SquadTracker
             }
 
             this.PlayerJoinedInstance?.Invoke(player);
+        }
+
+        private void OnSomeoneDidSomething(object sender, RawCombatEventArgs e)
+        {
+            // Focus only on events tracing combat actions.
+            if (e.CombatEvent.Ev == null) return;
+
+            var src = e.CombatEvent.Src;
+            if (_characters.TryGetValue(src.Name, out var srcCharacter) && srcCharacter.Specialization != src.Elite)
+            {
+                srcCharacter.Specialization = src.Elite;
+                this.CharacterChangedSpecialization?.Invoke(srcCharacter);
+            }
+
+            var dst = e.CombatEvent.Dst;
+            if (_characters.TryGetValue(dst.Name, out var dstCharacter) && dstCharacter.Specialization != dst.Elite)
+            {
+                dstCharacter.Specialization = dst.Elite;
+                this.CharacterChangedSpecialization?.Invoke(dstCharacter);
+            }
         }
 
         private void OnPlayerLeftInstance(CommonFields.Player arcDpsPlayer)

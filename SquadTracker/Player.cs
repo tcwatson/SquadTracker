@@ -13,7 +13,11 @@ namespace Torlando.SquadTracker
             set
             {
                 _currentCharacter = value;
-                if (!_knownCharacters.Contains(value)) _knownCharacters.Add(value);
+                if (!_knownCharacters.Contains(value))
+                {
+                    _knownCharacters.Add(value);
+                    value.Player = this;
+                }
             }
         }
         public IReadOnlyCollection<Character> KnownCharacters => _knownCharacters;
