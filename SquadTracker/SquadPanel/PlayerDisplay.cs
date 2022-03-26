@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Torlando.SquadTracker.SquadPanel
 {
-    class PlayerButton : DetailsButton
+    class PlayerDisplay : DetailsButton
     {
         public Dropdown Role1Dropdown { get; set; }
         public Dropdown Role2Dropdown { get; set; }
@@ -42,7 +42,7 @@ namespace Torlando.SquadTracker.SquadPanel
 
         private const string _placeholderRoleName = "Select a role...";
 
-        public PlayerButton(IEnumerable<Role> availableRoles) : base()
+        public PlayerDisplay(IEnumerable<Role> availableRoles) : base()
         {
             IconSize = DetailsIconSize.Small;
             ShowVignette = true;

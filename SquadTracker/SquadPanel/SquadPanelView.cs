@@ -14,7 +14,7 @@ namespace Torlando.SquadTracker.SquadPanel
         private FlowPanel _squadMembersPanel;
         private FlowPanel _formerSquadMembersPanel;
         private StandardButton _clearFormerSquadButton;
-        private Dictionary<string, PlayerButton> _playerButtons = new Dictionary<string, PlayerButton>();
+        private Dictionary<string, PlayerDisplay> _playerDisplays = new Dictionary<string, PlayerDisplay>();
 
         #region Test
         private StandardButton _addPlayerButton;
@@ -90,7 +90,7 @@ namespace Torlando.SquadTracker.SquadPanel
         {
             var otherCharacters = playerModel.KnownCharacters.Except(new[] { playerModel.CurrentCharacter }).ToList();
 
-            _playerButtons.Add(playerModel.AccountName, new PlayerButton(roles) 
+            _playerDisplays.Add(playerModel.AccountName, new PlayerDisplay(roles)
             { 
                 Parent = _squadMembersPanel,
                 AccountName = playerModel.AccountName, 
@@ -102,29 +102,29 @@ namespace Torlando.SquadTracker.SquadPanel
 
         public void SetPlayerIcon(Player playerModel, AsyncTexture2D icon)
         {
-            if (!_playerButtons.TryGetValue(playerModel.AccountName, out var button)) return;
-            button.Icon = icon;
+            if (!_playerDisplays.TryGetValue(playerModel.AccountName, out var display)) return;
+            display.Icon = icon;
         }
 
         public void MovePlayerToFormerMembers(string accountName)
         {
-            if (_playerButtons.TryGetValue(accountName, out var button))
+            if (_playerDisplays.TryGetValue(accountName, out var display))
             { 
-                button.Parent = _formerSquadMembersPanel;
+                display.Parent = _formerSquadMembersPanel;
             }
         }
 
         public void MoveFormerPlayerBackToSquad(Player playerModel, AsyncTexture2D icon)
         {
-            if (!_playerButtons.TryGetValue(playerModel.AccountName, out var button)) return;
+            if (!_playerDisplays.TryGetValue(playerModel.AccountName, out var display)) return;
 
-            button.CharacterName = playerModel.CurrentCharacter.Name;
-            button.Icon = icon;
+            display.CharacterName = playerModel.CurrentCharacter.Name;
+            display.Icon = icon;
 
             var otherCharacters = playerModel.KnownCharacters.Except(new[] { playerModel.CurrentCharacter }).ToList();
-            button.BasicTooltipText = OtherCharactersToString(otherCharacters);
+            display.BasicTooltipText = OtherCharactersToString(otherCharacters);
 
-            button.Parent = _squadMembersPanel;
+            display.Parent = _squadMembersPanel;
         }
 
         private static string OtherCharactersToString(IReadOnlyCollection<Character> characters)
