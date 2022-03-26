@@ -31,6 +31,7 @@ namespace Torlando.SquadTracker
 
         private static readonly Logger Logger = Logger.GetLogger<Module>();
 
+        private PlayersManager _playersManager;
         private PlayerIconsManager _playerIconsManager;
         private ObservableCollection<Role> _customRoles;
 
@@ -173,13 +174,15 @@ namespace Torlando.SquadTracker
         /// </summary>
         protected override void OnModuleLoaded(EventArgs e)
         {
+            _playersManager = new PlayersManager(GameService.ArcDps);
+
             _tabPanel = BuildPanel(GameService.Overlay.BlishHudWindow.ContentRegion);
             //_windowTab = GameService.Overlay.BlishHudWindow.AddTab("Squad Tracker", ContentsManager.GetTexture(@"textures\commandertag.png"), _tabPanel);
             _newTab = GameService.Overlay.BlishHudWindow.AddTab(
                 icon: ContentsManager.GetTexture(@"textures\commandertag.png"),
                 viewFunc: () => {
                     var view = new MainScreenView();
-                    var presenter = new MainScreenPresenter(view, _playerIconsManager, _customRoles);
+                    var presenter = new MainScreenPresenter(view, _playersManager, _playerIconsManager, _customRoles);
                     return view.WithPresenter(presenter);
                 },
                 name: "Squad Tracker Tab"

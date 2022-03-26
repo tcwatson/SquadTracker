@@ -66,12 +66,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\IconHelper.cs" />
-    <Compile Include="SquadPanel\Character.cs" />
+    <Compile Include="PlayersManager.cs" />
+    <Compile Include="Character.cs" />
     <Compile Include="OldPlayer.cs" />
     <Compile Include="MainScreen\MainScreenPresenter.cs" />
     <Compile Include="MainScreen\MainScreenView.cs" />
     <Compile Include="SquadPanel\PlayerButton.cs" />
     <Compile Include="PlayerIconsManager.cs" />
+    <Compile Include="Player.cs" />
     <Compile Include="SquadPanel\PlayerModel.cs" />
     <Compile Include="SquadPanel\Role.cs" />
     <Compile Include="SquadPanel\Squad.cs" />
