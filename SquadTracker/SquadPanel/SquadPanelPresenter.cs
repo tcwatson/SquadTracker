@@ -4,62 +4,68 @@ using System.Collections.Generic;
 
 namespace Torlando.SquadTracker.SquadPanel
 {
-    internal class SquadPanelPresenter : Presenter<SquadPanelView, Squad>
+    internal class SquadPanelPresenter : Presenter<SquadPanelView, object>
     {
         private readonly PlayersManager _playersManager;
+        private readonly SquadManager _squadManager;
         private readonly PlayerIconsManager _iconsManager;
         private readonly IEnumerable<Role> _roles;
 
+        private readonly Squad _squad;
+
         public SquadPanelPresenter(
-            SquadPanelView view, 
-            Squad model,
+            SquadPanelView view,
             PlayersManager playersManager,
+            SquadManager squadManager,
             PlayerIconsManager iconsManager,
             IEnumerable<Role> roles
-        ) : base (view, model) 
+        ) : base (view, null)
         {
             _playersManager = playersManager;
+            _squadManager = squadManager;
             _iconsManager = iconsManager;
             _roles = roles;
+
+            _squad = _squadManager.GetSquad();
         }
 
         protected override void UpdateView()
         {
-            var players = _playersManager.GetPlayers();
-            foreach (var player in players.Where(p => p.IsInSquad))
+            foreach (var member in _squad.CurrentMembers)
             {
-                AddPlayer(player);
+                AddPlayer(member, false);
             }
 
-            _playersManager.PlayerJoinedInstance += AddPlayer;
+            foreach (var formerMember in _squad.FormerMembers)
+            {
+                AddPlayer(formerMember, false);
+                View.MovePlayerToFormerMembers(formerMember.AccountName);
+            }
+
+            _squadManager.PlayerJoinedSquad += AddPlayer;
             _playersManager.CharacterChangedSpecialization += ChangeCharacterSpecialization;
-            _playersManager.PlayerLeftInstance += RemovePlayer;
+            _squadManager.PlayerLeftSquad += RemovePlayer;
         }
 
         protected override void Unload()
         {
             // To allow for garbage collection.
-            _playersManager.PlayerJoinedInstance -= AddPlayer;
+            _squadManager.PlayerJoinedSquad -= AddPlayer;
             _playersManager.CharacterChangedSpecialization -= ChangeCharacterSpecialization;
-            _playersManager.PlayerLeftInstance -= RemovePlayer;
+            _squadManager.PlayerLeftSquad -= RemovePlayer;
         }
 
-        private void AddPlayer(Player player)
+        private void AddPlayer(Player player, bool isReturning)
         {
             var character = player.CurrentCharacter;
             var icon = _iconsManager.GetSpecializationIcon(character.Profession, character.Specialization);
 
-            if (Model.FormerSquadMembers.Contains(player))
+            if (isReturning)
             {
-                Model.CurrentSquadMembers.Add(player);
-                Model.FormerSquadMembers.Remove(player);
-
                 View.MoveFormerPlayerBackToSquad(player, icon);
             }
             else
             {
-                Model.CurrentSquadMembers.Add(player);
-
                 View.DisplayPlayer(player, icon, _roles);
             }
         }
@@ -72,18 +78,15 @@ namespace Torlando.SquadTracker.SquadPanel
 
         private void RemovePlayer(string accountName)
         {
-            var player = Model.CurrentSquadMembers.FirstOrDefault(p => p.AccountName == accountName);
+            var player = _squad.FormerMembers.FirstOrDefault(p => p.AccountName == accountName);
             if (player == null) return;
-
-            Model.CurrentSquadMembers.Remove(player);
-            Model.FormerSquadMembers.Add(player);
 
             View.MovePlayerToFormerMembers(accountName);
         }
 
         public void ClearFormerSquadMembers()
         {
-            Model.ClearFormerSquadMembers();
+            _squad.ClearFormerSquadMembers();
         }
 
         #region Test
@@ -94,7 +97,6 @@ namespace Torlando.SquadTracker.SquadPanel
             var player = new Player("test.1234", character);
 
             var icon = _iconsManager.GetSpecializationIcon(character.Profession, character.Specialization);
-            Model.CurrentSquadMembers.Add(player);
             View.DisplayPlayer(player, icon, _roles);
         }
 

@@ -5,7 +5,7 @@ namespace Torlando.SquadTracker
     internal class Player
     {
         public string AccountName { get; set; }
-        public bool IsInSquad { get; set; } = true;
+        public bool IsInInstance { get; set; } = true;
 
         public Character CurrentCharacter
         {

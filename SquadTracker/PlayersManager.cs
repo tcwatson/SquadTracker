@@ -50,7 +50,7 @@ namespace Torlando.SquadTracker
             if (_players.TryGetValue(arcDpsPlayer.AccountName, out var player))
             {
                 player.CurrentCharacter = character;
-                player.IsInSquad = true;
+                player.IsInInstance = true;
             }
             else
             {
@@ -85,7 +85,7 @@ namespace Torlando.SquadTracker
         {
             if (!_players.TryGetValue(arcDpsPlayer.AccountName, out var player)) return;
 
-            player.IsInSquad = false;
+            player.IsInInstance = false;
             this.PlayerLeftInstance?.Invoke(player.AccountName);
         }
     }
