@@ -141,5 +141,13 @@ namespace Torlando.SquadTracker.SquadPanel
 
             return $"Other characters:\n{charactersList}";
         }
+
+        public void RemoveFormerMember(string accountName)
+        {
+            if (!_playerDisplays.TryGetValue(accountName, out var display)) return;
+
+            _playerDisplays.Remove(accountName);
+            display.Parent = null;
+        }
     }
 }

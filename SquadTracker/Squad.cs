@@ -5,14 +5,13 @@ namespace Torlando.SquadTracker
     internal class Squad
     {
         public ICollection<Player> CurrentMembers { get; } = new HashSet<Player>();
-        public ICollection<Player> FormerMembers { get; } = new HashSet<Player>();
-
+        public ICollection<Player> FormerMembers { get; private set; } = new HashSet<Player>();
 
         //public ICollection<Role> FilledRoles { get; } = new List<Role>();
 
-        public void ClearFormerSquadMembers()
+        public void ClearFormerMembers()
         {
-            //FormerMembers = new HashSet<Player>();
+            this.FormerMembers = new HashSet<Player>();
         }
     }
 }

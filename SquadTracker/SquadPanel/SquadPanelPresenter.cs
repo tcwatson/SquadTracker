@@ -86,7 +86,13 @@ namespace Torlando.SquadTracker.SquadPanel
 
         public void ClearFormerSquadMembers()
         {
-            _squad.ClearFormerSquadMembers();
+            var formerMembers = _squad.FormerMembers;
+            _squad.ClearFormerMembers();
+
+            foreach (var formerMember in formerMembers)
+            {
+                View.RemoveFormerMember(formerMember.AccountName);
+            }
         }
 
         #region Test
