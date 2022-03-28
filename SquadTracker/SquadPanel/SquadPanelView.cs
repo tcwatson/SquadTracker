@@ -2,7 +2,9 @@
 using Blish_HUD.Controls;
 using Blish_HUD.Graphics.UI;
 using Microsoft.Xna.Framework;
+using System.Linq;
 using System.Collections.Generic;
+using Torlando.SquadTracker.RolesScreen;
 
 namespace Torlando.SquadTracker.SquadPanel
 {
@@ -13,7 +15,7 @@ namespace Torlando.SquadTracker.SquadPanel
         private FlowPanel _squadMembersPanel;
         private FlowPanel _formerSquadMembersPanel;
         private StandardButton _clearFormerSquadButton;
-        private Dictionary<string, PlayerButton> _playerButtons = new Dictionary<string, PlayerButton>();
+        private Dictionary<string, PlayerDisplay> _playerDisplays = new Dictionary<string, PlayerDisplay>();
 
         #region Test
         private StandardButton _addPlayerButton;
@@ -69,7 +71,7 @@ namespace Torlando.SquadTracker.SquadPanel
             };
             _addPlayerButton.Click += delegate
             {
-                Presenter.AddPlayer();
+                Presenter.AddTestPlayer();
             };
 
             _removeButton = new StandardButton
@@ -80,28 +82,73 @@ namespace Torlando.SquadTracker.SquadPanel
             };
             _removeButton.Click += delegate
             {
-                Presenter.RemovePlayer();
+                Presenter.RemoveTestPlayer();
             };
             #endregion
         }
 
-        public void SpawnPlayerButton(PlayerModel playerModel, AsyncTexture2D icon, IEnumerable<Role> roles)
+        public void DisplayPlayer(Player playerModel, AsyncTexture2D icon, IEnumerable<Role> roles)
         {
-            _playerButtons.Add(playerModel.AccountName, new PlayerButton(roles) 
+            var otherCharacters = playerModel.KnownCharacters.Except(new[] { playerModel.CurrentCharacter }).ToList();
+
+            _playerDisplays.Add(playerModel.AccountName, new PlayerDisplay(roles)
             { 
                 Parent = _squadMembersPanel,
                 AccountName = playerModel.AccountName, 
-                CharacterName = playerModel.CharacterName,
-                Icon = icon
+                CharacterName = playerModel.CurrentCharacter.Name,
+                Icon = icon,
+                BasicTooltipText = OtherCharactersToString(otherCharacters),
             });
         }
 
-        public void RemovePlayerFromSquad(string accountName)
+        public void SetPlayerIcon(Player playerModel, AsyncTexture2D icon)
         {
-            if (_playerButtons.TryGetValue(accountName, out var button))
+            if (!_playerDisplays.TryGetValue(playerModel.AccountName, out var display)) return;
+            display.Icon = icon;
+        }
+
+        public void MovePlayerToFormerMembers(string accountName)
+        {
+            if (_playerDisplays.TryGetValue(accountName, out var display))
             { 
-                button.Parent = _formerSquadMembersPanel;
+                display.Parent = _formerSquadMembersPanel;
             }
+        }
+
+        public void MoveFormerPlayerBackToSquad(Player playerModel, AsyncTexture2D icon)
+        {
+            if (!_playerDisplays.TryGetValue(playerModel.AccountName, out var display)) return;
+
+            display.CharacterName = playerModel.CurrentCharacter.Name;
+            display.Icon = icon;
+
+            var otherCharacters = playerModel.KnownCharacters.Except(new[] { playerModel.CurrentCharacter }).ToList();
+            display.BasicTooltipText = OtherCharactersToString(otherCharacters);
+
+            display.Parent = _squadMembersPanel;
+        }
+
+        private static string OtherCharactersToString(IReadOnlyCollection<Character> characters)
+        {
+            if (characters.Count == 0) return string.Empty;
+
+            var charactersList = string.Join("\n",
+                characters
+                    .OrderBy(character => character.Name)
+                    .Select(character =>
+                        $"- {character.Name} ({Specialization.GetEliteName(character.Specialization, character.Profession)})"
+                    )
+            );
+
+            return $"Other characters:\n{charactersList}";
+        }
+
+        public void RemoveFormerMember(string accountName)
+        {
+            if (!_playerDisplays.TryGetValue(accountName, out var display)) return;
+
+            _playerDisplays.Remove(accountName);
+            display.Parent = null;
         }
     }
 }

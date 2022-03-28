@@ -20,6 +20,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Torlando.SquadTracker.MainScreen;
 using Torlando.SquadTracker.Models;
+using Torlando.SquadTracker.RolesScreen;
 using Torlando.SquadTracker.SquadPanel;
 
 namespace Torlando.SquadTracker
@@ -31,6 +32,8 @@ namespace Torlando.SquadTracker
 
         private static readonly Logger Logger = Logger.GetLogger<Module>();
 
+        private PlayersManager _playersManager;
+        private SquadManager _squadManager;
         private PlayerIconsManager _playerIconsManager;
         private ObservableCollection<Role> _customRoles;
 
@@ -173,13 +176,16 @@ namespace Torlando.SquadTracker
         /// </summary>
         protected override void OnModuleLoaded(EventArgs e)
         {
+            _playersManager = new PlayersManager(GameService.ArcDps);
+            _squadManager = new SquadManager(_playersManager);
+
             _tabPanel = BuildPanel(GameService.Overlay.BlishHudWindow.ContentRegion);
             //_windowTab = GameService.Overlay.BlishHudWindow.AddTab("Squad Tracker", ContentsManager.GetTexture(@"textures\commandertag.png"), _tabPanel);
             _newTab = GameService.Overlay.BlishHudWindow.AddTab(
                 icon: ContentsManager.GetTexture(@"textures\commandertag.png"),
                 viewFunc: () => {
                     var view = new MainScreenView();
-                    var presenter = new MainScreenPresenter(view, _playerIconsManager, _customRoles);
+                    var presenter = new MainScreenPresenter(view, _playersManager, _squadManager, _playerIconsManager, _customRoles);
                     return view.WithPresenter(presenter);
                 },
                 name: "Squad Tracker Tab"
@@ -189,9 +195,9 @@ namespace Torlando.SquadTracker
 
 
             GameService.ArcDps.Common.Activate();
-            GameService.ArcDps.Common.PlayerAdded += PlayerAddedEvent;
-            GameService.ArcDps.Common.PlayerRemoved += PlayerRemovedEvent;
-            GameService.ArcDps.RawCombatEvent += RawCombatEvent;
+            //GameService.ArcDps.Common.PlayerAdded += PlayerAddedEvent;
+            //GameService.ArcDps.Common.PlayerRemoved += PlayerRemovedEvent;
+            //GameService.ArcDps.RawCombatEvent += RawCombatEvent;
             _playerCollection = new PlayerCollection(_arcPlayers, _squadMembersPanel, _formerSquadMembersPanel);
 
             // Base handler must be called

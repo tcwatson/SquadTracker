@@ -66,22 +66,25 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\IconHelper.cs" />
-    <Compile Include="SquadPanel\Character.cs" />
+    <Compile Include="PlayersManager.cs" />
+    <Compile Include="Character.cs" />
     <Compile Include="OldPlayer.cs" />
     <Compile Include="MainScreen\MainScreenPresenter.cs" />
     <Compile Include="MainScreen\MainScreenView.cs" />
-    <Compile Include="SquadPanel\PlayerButton.cs" />
+    <Compile Include="SquadPanel\PlayerDisplay.cs" />
     <Compile Include="PlayerIconsManager.cs" />
+    <Compile Include="Player.cs" />
     <Compile Include="SquadPanel\PlayerModel.cs" />
-    <Compile Include="SquadPanel\Role.cs" />
+    <Compile Include="RolesScreen\Role.cs" />
     <Compile Include="SquadPanel\Squad.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="PlayerCollection.cs" />
     <Compile Include="SquadPanel\RoleSelectionPresenter.cs" />
-    <Compile Include="RolesPersister.cs" />
+    <Compile Include="RolesScreen\RolesPersister.cs" />
     <Compile Include="RolesScreen\RolesPresenter.cs" />
     <Compile Include="RolesScreen\RolesView.cs" />
     <Compile Include="Specialization.cs" />
+    <Compile Include="SquadPanel\SquadManager.cs" />
     <Compile Include="SquadPanel\SquadPanelPresenter.cs" />
     <Compile Include="SquadPanel\SquadPanelView.cs" />
     <Compile Include="SquadPanel\RoleSelectionView.cs" />

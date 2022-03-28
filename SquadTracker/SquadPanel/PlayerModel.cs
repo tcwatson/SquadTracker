@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Torlando.SquadTracker.RolesScreen;
 
 namespace Torlando.SquadTracker.SquadPanel
 {

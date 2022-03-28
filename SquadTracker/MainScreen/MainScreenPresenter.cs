@@ -9,11 +9,15 @@ namespace Torlando.SquadTracker.MainScreen
 {
     internal class MainScreenPresenter : Presenter<MainScreenView, int>
     {
+        private readonly PlayersManager _playersManager;
+        private readonly SquadManager _squadManager;
         private readonly PlayerIconsManager _iconsManager;
         private readonly ICollection<Role> _roles;
 
-        public MainScreenPresenter(MainScreenView view, PlayerIconsManager iconsManager, ICollection<Role> roles) : base (view, 0)
+        public MainScreenPresenter(MainScreenView view, PlayersManager playersManager, SquadManager squadManager, PlayerIconsManager iconsManager, ICollection<Role> roles) : base (view, 0)
         {
+            _playersManager = playersManager;
+            _squadManager = squadManager;
             _iconsManager = iconsManager;
             _roles = roles;
         }
@@ -31,7 +35,7 @@ namespace Torlando.SquadTracker.MainScreen
         private IView CreateSquadView()
         {
             var view = new SquadPanelView();
-            var presenter = new SquadPanelPresenter(view, new Squad(), _iconsManager, _roles);
+            var presenter = new SquadPanelPresenter(view, _playersManager, _squadManager, _iconsManager, _roles);
             return view.WithPresenter(presenter);
         }
 
