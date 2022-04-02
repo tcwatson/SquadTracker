@@ -31,11 +31,11 @@ namespace Torlando.SquadTracker
         private Character _currentCharacter;
         private readonly HashSet<Character> _knownCharacters = new HashSet<Character>();
 
-#if DEBUG
+        #if DEBUG
         public override string ToString()
         {
             return $"{AccountName} ({_knownCharacters.Count} character(s))";
         }
-#endif
+        #endif
     }
 }

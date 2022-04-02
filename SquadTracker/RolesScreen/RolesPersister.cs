@@ -46,11 +46,11 @@ namespace Torlando.SquadTracker.RolesScreen
 
         private static async Task SaveRoles(IEnumerable<Role> roles, string filePath)
         {
-#if DEBUG
+            #if DEBUG
             var json = JsonConvert.SerializeObject(roles, Formatting.Indented);
-#else
+            #else
             var json = JsonConvert.SerializeObject(roles);
-#endif
+            #endif
             File.WriteAllText(filePath, json);
         }
     }

@@ -18,11 +18,11 @@
         public override int GetHashCode()
             => this.Name.GetHashCode();
 
-#if DEBUG
+        #if DEBUG
         public override string ToString()
         {
             return $"{Name} ({SquadTracker.Specialization.GetEliteName(Specialization, Profession)})";
         }
-#endif
+        #endif
     }
 }
