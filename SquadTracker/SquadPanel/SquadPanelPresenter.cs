@@ -96,7 +96,7 @@ namespace Torlando.SquadTracker.SquadPanel
             }
         }
 
-        #region Test
+        #if DEBUG
 
         public void AddTestPlayer()
         {
@@ -112,6 +112,6 @@ namespace Torlando.SquadTracker.SquadPanel
             View.MovePlayerToFormerMembers("test.1234");
         }
 
-        #endregion
+        #endif
     }
 }

@@ -17,10 +17,10 @@ namespace Torlando.SquadTracker.SquadPanel
         private StandardButton _clearFormerSquadButton;
         private Dictionary<string, PlayerDisplay> _playerDisplays = new Dictionary<string, PlayerDisplay>();
 
-        #region Test
+        #if DEBUG
         private StandardButton _addPlayerButton;
         private StandardButton _removeButton;
-        #endregion
+        #endif
         #endregion
 
         public SquadPanelView()
@@ -62,7 +62,7 @@ namespace Torlando.SquadTracker.SquadPanel
                 Presenter.ClearFormerSquadMembers();
             };
 
-            #region Test
+            #if DEBUG
             _addPlayerButton = new StandardButton
             {
                 Parent = buildPanel,
@@ -84,7 +84,7 @@ namespace Torlando.SquadTracker.SquadPanel
             {
                 Presenter.RemoveTestPlayer();
             };
-            #endregion
+            #endif
         }
 
         public void DisplayPlayer(Player playerModel, AsyncTexture2D icon, IEnumerable<Role> roles)

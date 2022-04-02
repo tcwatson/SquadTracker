@@ -13,10 +13,10 @@ namespace Torlando.SquadTracker.MainScreen
         private MenuItem _squadRolesMenu;
         private ViewContainer _viewContainer;
 
-        #region Test
+        #if DEBUG
         private StandardButton _addPlayerButton;
         private StandardButton _removeButton;
-        #endregion
+        #endif
         #endregion
 
         public MainScreenView()
