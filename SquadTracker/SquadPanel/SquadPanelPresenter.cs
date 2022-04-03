@@ -101,22 +101,21 @@ namespace Torlando.SquadTracker.SquadPanel
             _squad.SetRole(accountName, role, index);
         }
 
-        #if DEBUG
+#if DEBUG
 
-        //public void AddTestPlayer()
-        //{
-        //    var character = new Character("Frodo", 2, 18);
-        //    var player = new Player("test.1234", character);
+        public void AddTestPlayer()
+        {
+            var character = new Character("Frodo", 2, 18);
+            var player = new Player("test.1234", character);
 
-        //    var icon = _iconsManager.GetSpecializationIcon(character.Profession, character.Specialization);
-        //    View.DisplayPlayer(player, icon, _roles);
-        //}
+            AddPlayer(player, false);
+        }
 
-        //public void RemoveTestPlayer()
-        //{
-        //    View.MovePlayerToFormerMembers("test.1234");
-        //}
+        public void RemoveTestPlayer()
+        {
+            View.MovePlayerToFormerMembers("test.1234");
+        }
 
-        #endif
+#endif
     }
 }
