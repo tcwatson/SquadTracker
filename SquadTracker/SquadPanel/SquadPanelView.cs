@@ -38,7 +38,8 @@ namespace Torlando.SquadTracker.SquadPanel
                 CanScroll = true,
                 Size = new Point(buildPanel.ContentRegion.Width, 530), //
                 Title = "Current Squad Members",
-                ShowBorder = true
+                ShowBorder = true,
+                BasicTooltipText = "You loaded Blish HUD after starting Guild Wars 2. Please change maps to refresh."
             };
             _formerSquadMembersPanel = new FlowPanel
             {
@@ -99,7 +100,7 @@ namespace Torlando.SquadTracker.SquadPanel
                 Icon = icon,
                 BasicTooltipText = OtherCharactersToString(otherCharacters),
             };
-
+ 
             playerDisplay.Role1Dropdown.ValueChanged += (o, e) => UpdateSelectedRoles(playerModel, e, 0);
             playerDisplay.Role2Dropdown.ValueChanged += (o, e) => UpdateSelectedRoles(playerModel, e, 1);
 
