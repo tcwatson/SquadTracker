@@ -65,6 +65,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants\Placeholder.cs" />
     <Compile Include="Helpers\IconHelper.cs" />
     <Compile Include="PlayersManager.cs" />
     <Compile Include="Character.cs" />

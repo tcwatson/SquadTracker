@@ -67,7 +67,7 @@ namespace Torlando.SquadTracker.SquadPanel
             }
             else
             {
-                View.DisplayPlayer(player, icon, _roles);
+                View.DisplayPlayer(player, icon, _roles, _squad.GetRoles(player.AccountName));
             }
         }
 
@@ -96,21 +96,26 @@ namespace Torlando.SquadTracker.SquadPanel
             }
         }
 
+        public void UpdateSelectedRoles(string accountName, string role, int index)
+        {
+            _squad.SetRole(accountName, role, index);
+        }
+
         #if DEBUG
 
-        public void AddTestPlayer()
-        {
-            var character = new Character("Frodo", 2, 18);
-            var player = new Player("test.1234", character);
+        //public void AddTestPlayer()
+        //{
+        //    var character = new Character("Frodo", 2, 18);
+        //    var player = new Player("test.1234", character);
 
-            var icon = _iconsManager.GetSpecializationIcon(character.Profession, character.Specialization);
-            View.DisplayPlayer(player, icon, _roles);
-        }
+        //    var icon = _iconsManager.GetSpecializationIcon(character.Profession, character.Specialization);
+        //    View.DisplayPlayer(player, icon, _roles);
+        //}
 
-        public void RemoveTestPlayer()
-        {
-            View.MovePlayerToFormerMembers("test.1234");
-        }
+        //public void RemoveTestPlayer()
+        //{
+        //    View.MovePlayerToFormerMembers("test.1234");
+        //}
 
         #endif
     }

@@ -63,42 +63,65 @@ namespace Torlando.SquadTracker.SquadPanel
             };
 
             #if DEBUG
-            _addPlayerButton = new StandardButton
-            {
-                Parent = buildPanel,
-                Text = "Add Player",
-                Location = new Point(_squadMembersPanel.ContentRegion.Right - 135, _squadMembersPanel.Top + 5)
-            };
-            _addPlayerButton.Click += delegate
-            {
-                Presenter.AddTestPlayer();
-            };
+            //_addPlayerButton = new StandardButton
+            //{
+            //    Parent = buildPanel,
+            //    Text = "Add Player",
+            //    Location = new Point(_squadMembersPanel.ContentRegion.Right - 135, _squadMembersPanel.Top + 5)
+            //};
+            //_addPlayerButton.Click += delegate
+            //{
+            //    Presenter.AddTestPlayer();
+            //};
 
-            _removeButton = new StandardButton
-            {
-                Parent = buildPanel,
-                Text = "Remove",
-                Location = new Point(_addPlayerButton.Location.X - 135, _squadMembersPanel.Top + 5)
-            };
-            _removeButton.Click += delegate
-            {
-                Presenter.RemoveTestPlayer();
-            };
+            //_removeButton = new StandardButton
+            //{
+            //    Parent = buildPanel,
+            //    Text = "Remove",
+            //    Location = new Point(_addPlayerButton.Location.X - 135, _squadMembersPanel.Top + 5)
+            //};
+            //_removeButton.Click += delegate
+            //{
+            //    Presenter.RemoveTestPlayer();
+            //};
             #endif
         }
 
-        public void DisplayPlayer(Player playerModel, AsyncTexture2D icon, IEnumerable<Role> roles)
+        public void DisplayPlayer(Player playerModel, AsyncTexture2D icon, IEnumerable<Role> roles, List<string> assignedRoles)
         {
             var otherCharacters = playerModel.KnownCharacters.Except(new[] { playerModel.CurrentCharacter }).ToList();
 
-            _playerDisplays.Add(playerModel.AccountName, new PlayerDisplay(roles)
-            { 
+            var playerDisplay = new PlayerDisplay(roles)
+            {
                 Parent = _squadMembersPanel,
-                AccountName = playerModel.AccountName, 
+                AccountName = playerModel.AccountName,
                 CharacterName = playerModel.CurrentCharacter.Name,
                 Icon = icon,
                 BasicTooltipText = OtherCharactersToString(otherCharacters),
-            });
+            };
+            playerDisplay.Role1Dropdown.ValueChanged += Role1Dropdown_ValueChanged;
+            playerDisplay.Role2Dropdown.ValueChanged += Role2Dropdown_ValueChanged;
+
+            playerDisplay.Role1Dropdown.SelectedItem = assignedRoles[0];
+            playerDisplay.Role2Dropdown.SelectedItem = assignedRoles[1];
+            _playerDisplays.Add(playerModel.AccountName, playerDisplay);
+        }
+
+        private void Role1Dropdown_ValueChanged(object sender, ValueChangedEventArgs e)
+        {
+            UpdateSelectedRoles(sender, e, 0);
+        }
+
+        private void Role2Dropdown_ValueChanged(object sender, ValueChangedEventArgs e)
+        {
+            UpdateSelectedRoles(sender, e, 1);
+        }
+
+        private void UpdateSelectedRoles(object sender, ValueChangedEventArgs e, int index)
+        {
+            var role = e.CurrentValue;
+            var accountName = ((PlayerDisplay)((Dropdown)sender).Parent).AccountName;
+            Presenter.UpdateSelectedRoles(accountName, role, index);
         }
 
         public void SetPlayerIcon(Player playerModel, AsyncTexture2D icon)

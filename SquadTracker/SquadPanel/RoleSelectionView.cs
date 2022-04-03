@@ -2,6 +2,7 @@
 using Blish_HUD.Graphics.UI;
 using Microsoft.Xna.Framework;
 using System.Collections.ObjectModel;
+using Torlando.SquadTracker.Constants;
 using Torlando.SquadTracker.RolesScreen;
 
 namespace Torlando.SquadTracker.SquadPanel
@@ -14,7 +15,7 @@ namespace Torlando.SquadTracker.SquadPanel
         private Image _roleIcon1 = new Image { Size = new Point(27, 27) };
         private Image _roleIcon2 = new Image { Size = new Point(27, 27) };
 
-        private const string _placeholderRoleName = "Select a role...";
+        private const string _placeholderRoleName = Placeholder.DefaultRole;
         #endregion
 
         public RoleSelectionView(ObservableCollection<Role> availableRoles)

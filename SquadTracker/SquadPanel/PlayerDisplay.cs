@@ -1,8 +1,8 @@
-﻿using Blish_HUD.Content;
-using Blish_HUD.Controls;
+﻿using Blish_HUD.Controls;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System.Linq;
+using Torlando.SquadTracker.Constants;
 using Torlando.SquadTracker.RolesScreen;
 
 namespace Torlando.SquadTracker.SquadPanel
@@ -41,7 +41,7 @@ namespace Torlando.SquadTracker.SquadPanel
         private Image _roleIcon1 = new Image { Size = new Point(27, 27) };
         private Image _roleIcon2 = new Image { Size = new Point(27, 27) };
 
-        private const string _placeholderRoleName = "Select a role...";
+        private const string _placeholderRoleName = Placeholder.DefaultRole;
 
         public PlayerDisplay(IEnumerable<Role> availableRoles) : base()
         {
@@ -75,7 +75,8 @@ namespace Torlando.SquadTracker.SquadPanel
             }
             dropdown.ValueChanged += delegate
             {
-                roleIcon.Texture = roles.FirstOrDefault(role => role.Name.Equals(dropdown.SelectedItem))?.Icon ?? null;
+                var selectedRole = roles.FirstOrDefault(role => role.Name.Equals(dropdown.SelectedItem));
+                roleIcon.Texture = selectedRole?.Icon ?? null;
             };
             return dropdown;
         }
