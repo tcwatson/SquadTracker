@@ -42,7 +42,7 @@ namespace Torlando.SquadTracker
 
         public AsyncTexture2D GetSpecializationIcon(uint professionCode, uint specializationCode)
         {
-            if (specializationCode != default)
+            if (specializationCode != default && specializationCode <= _specializationIcons.Keys.Max())
             {
                 return _specializationIcons[specializationCode];
             }
