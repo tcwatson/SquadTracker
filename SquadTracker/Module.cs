@@ -157,7 +157,7 @@ namespace Torlando.SquadTracker
         // happens when you disable the module
         protected override void Unload()
         {
-            
+            GameService.Overlay.BlishHudWindow.RemoveTab(_newTab);
         }
     }
 
