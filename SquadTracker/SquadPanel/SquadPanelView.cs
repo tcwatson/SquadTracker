@@ -107,6 +107,8 @@ namespace Torlando.SquadTracker.SquadPanel
             playerDisplay.Role1Dropdown.SelectedItem = assignedRoles[0];
             playerDisplay.Role2Dropdown.SelectedItem = assignedRoles[1];
             _playerDisplays.Add(playerModel.AccountName, playerDisplay);
+
+            _squadMembersPanel.BasicTooltipText = "";
         }
 
         private void UpdateSelectedRoles(Player playerModel, ValueChangedEventArgs e, int index)
