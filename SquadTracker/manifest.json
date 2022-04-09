@@ -1,13 +1,13 @@
 {
   "name": "Squad Tracker",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "namespace": "Torlando.SquadTracker",
   "package": "SquadTracker.dll",
   "manifest_version": 1,
 
   "description": "Tracks current and former squad members, and lets you assign roles to them.",
   "dependencies": {
-    "bh.blishhud": ">=0.11.0"
+    "bh.blishhud": ">=0.11.6"
   },
   "url": "https://github.com/tcwatson/SquadTracker",
   "contributors": [

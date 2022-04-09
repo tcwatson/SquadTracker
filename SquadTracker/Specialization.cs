@@ -121,11 +121,10 @@ namespace Torlando.SquadTracker
             var folder = useColoredIcons ? "professions_colored" : "professions_monochrome";
             return @$"{folder}\{GetCoreName(core)}.png";
         }
-        #endregion
-
         private static string GetEliteName(uint elite)
         {
             return GetEliteName(elite, default); //core uint not needed for elites
         }
+        #endregion
     }
 }
