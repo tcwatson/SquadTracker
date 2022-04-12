@@ -23,6 +23,7 @@ namespace Torlando.SquadTracker
 
         private static readonly Logger Logger = Logger.GetLogger<Module>();
 
+        private ArcDpsTimeoutChecker _arcDpsTimeoutChecker;
         private PlayersManager _playersManager;
         private SquadManager _squadManager;
         private PlayerIconsManager _playerIconsManager;
@@ -138,8 +139,16 @@ namespace Torlando.SquadTracker
                 },
                 name: "Squad Tracker Tab"
             );
-            
+
+            _arcDpsTimeoutChecker = new ArcDpsTimeoutChecker(GameService.ArcDps, GameService.Overlay, GameService.Gw2Mumble);
+            _arcDpsTimeoutChecker.ArcDpsTimedOut += (o, e) =>
+            {
+                Logger.Debug("Lost connexion to ArcDPS… Retrying.");
+                _arcDpsTimeoutChecker.Enable();
+            };
+
             GameService.ArcDps.Common.Activate();
+            _arcDpsTimeoutChecker.Enable();
 
             // Base handler must be called
             base.OnModuleLoaded(e);
@@ -151,7 +160,7 @@ namespace Torlando.SquadTracker
 
         protected override void Update(GameTime gameTime)
         {
-
+            _arcDpsTimeoutChecker.Check(gameTime);
         }
 
         // happens when you disable the module
